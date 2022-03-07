@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width">
+    <title>工程试验检测(拌和站)智能工作系统</title>
+    <link href="/res/ui/power-login.css" rel="stylesheet">
+    <link href="/res/fonts/font-awesome.min.css" rel="stylesheet">
+    <script src="/res/jquery/jquery.min.js"></script>
+    <script src="/res/ui/power-ui.js?t=20211128114714"></script>
+    <script src="/res/layer/layer.js"></script>
+    <script src="/res/jquery/validator.js"></script>
+    <script src="/res/jquery/tipso.min.js"></script>
+    <style>
+        body,
+        html {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0
+        }
+
+        body {
+            background: url(/res/ui/img/bg.jpg) no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+            position: absolute
+        }
+    </style>
+</head>
+
+<body class="aaabody">
+    <div class="wrap" style="margin-top:270px">
+        <div style="text-align:center"></div>
+        <div id="loginform" class="container">
+            <fieldset class="box">
+                <legend>登录</legend>
+                <dl class="form">
+                    <dd><input value="" id="username" type="text" class="px" placeholder="登录帐号、或手机号"></dd>
+                    <dd><input value="" id="password" type="password" class="px" placeholder="请输入密码"></dd>
+                    <dd style="overflow:hidden">
+                        <div style="float:left;width:60%">
+                            <input id="verifycode" maxlength="5" type="text" class="px" placeholder="请输入验证码">
+                        </div>
+                        <div style="float:left;width:40%">
+                            <img id="login_verifycode" class="img_verifycode" src="/captchaImage" width="95" height="38"
+                                alt="点击切换验证码" title="点击切换验证码" style="cursor:pointer;padding-top:2px;padding-left:5px">
+                        </div>
+                    </dd>
+                    <dd><span class="y"><a href="#" onclick='alert("请联系管理员")'>忘记密码了？</a></span></dd>
+                    <dd class="btn"><button id="btnlogin" type="button" class="pn"><span>登录</span></button></dd>
+                </dl>
+            </fieldset>
+        </div>
+    </div>
+    <div class="copyright"><br>Copyright © 2013-2021 . All rights reserved.</div>
+</body>
+<script>
+    var isIE = function (e) { var i = document.createElement("b"); i.innerHTML = "\x3c!--[if IE " + e + "]><i></i><![endif]--\x3e"; return i.getElementsByTagName("i").length === 1 }; if (isIE(6) || isIE(7) || isIE(8) || isIE(9)) { window.location.href = "/res/error/no_support.html" } if (window.self != window.top) { window.top.location = window.self.location } document.onkeydown = function (e) { if (!e) { e = window.event } if ((e.keyCode || e.which) == 13) { var i = document.getElementById("btnlogin"); btnlogin.click() } }; $(function () { $(".wrap").css("margin-top", ($(window).height() - $(".wrap").height()) / 2 - 15); $(window).resize(function (e) { $(".wrap").css("margin-top", ($(window).height() - $(".wrap").height()) / 2 - 15); e.stopPropagation() }); $("#username").focus(); $("#rememberMe").click(function () { if (!$(this).attr("checked")) { $(this).attr("checked", "true") } else { $(this).removeAttr("checked") } }); $("#btnlogin").click(function () { var e = $("#username"); var i = $("#password"); var n = $("#verifycode"); if (e.val() == "") { e.focus(); formMessage("请输入账户或手机号或邮箱。"); return false } else { if (i.val() == "") { i.focus(); formMessage("请输入密码。"); return false } else { if (n.val() == "") { n.focus(); formMessage("请输入验证码。"); return false } else { CheckLogin(0) } } } }); $("#login_verifycode").click(function () { $("#verifycode").val(""); $("#login_verifycode").attr("src", "/captchaImage?t=" + Math.random()) }) }); function CheckLogin(e) { $("#btnlogin").addClass("active").attr("disabled", "disabled"); $("#btnlogin").find("span").hide(); var i = $.trim($("#username").val()); var n = $.trim($("#password").val()); var t = $.trim($("#verifycode").val()); $.ajax({ url: "/login", data: { username: $.trim(i), password: $.trim(n), validateCode: t, rememberMe: e }, type: "post", dataType: "json", success: function (e) { if (e.success) { window.location.href = e.msg } else { if (e.msg.length >= 30) { dialogAlert(e.msg, 0) } else { formMessage(e.msg) } $("#btnlogin").removeClass("active").removeAttr("disabled"); $("#btnlogin").find("span").show(); $("#login_verifycode").trigger("click") } } }) } function formMessage(e, i) { $(".login_tips").parents("dt").remove(); var n = "login_tips"; if (i == 1) { n = "login_tips-succeed" } $(".form").prepend('<dt><div class="' + n + '"><i class="fa fa-question-circle"></i>' + e + "</div></dt>") } document.addEventListener("astilectron-ready", function () { astilectron.onMessage(function (e) { if (e.indexOf("msg") > 0) { var i = e.substr(3); astilectron.showErrorBox("错误提示！", i); return "" } }) }); $(document).on("contextmenu", function (e) { e.preventDefault() }); $(document).keydown(function (e) { if (e.keyCode == 123) { return false } else if (e.ctrlKey && e.shiftKey && e.keyCode == 73) { return false } else if (e.ctrlKey && e.shiftKey && e.keyCode == 74) { return false } })
+</script>
+
+</html>
