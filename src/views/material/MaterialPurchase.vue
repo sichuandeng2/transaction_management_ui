@@ -42,7 +42,7 @@
         <el-table-column prop="unitPrice" label="单价" width="80" />
         <el-table-column prop="precedenceLevel" label="优先级" width="120">
         </el-table-column>
-        <el-table-column prop="createTime" label="创建时间" width="150" ></el-table-column>
+        <el-table-column prop="createTime" label="发布日期" width="150" ></el-table-column>
         <el-table-column prop="status" label="状态" width="80" />
         <el-table-column prop="suggestLocation" label="建议地点" />
       </el-table>

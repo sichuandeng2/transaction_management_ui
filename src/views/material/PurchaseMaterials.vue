@@ -11,7 +11,7 @@
           </el-form-item>
           <el-form-item label="优先级">
             <el-select
-              v-model="search.status"
+              v-model="search.precedenceLevel"
               placeholder="请选择"
               v-on:change="research"
               filterable
@@ -46,7 +46,7 @@
         ></el-table-column>
         <el-table-column
           prop="createTime"
-          label="创建时间"
+          label="发布日期"
           width="150"
         ></el-table-column>
         <el-table-column prop="status" label="状态" width="80" />
@@ -180,7 +180,7 @@ export default {
       },
       search: {
         materialName: "",
-        status: "0",
+        precedenceLevel: "0",
         pageSize: 10,
         pageIndex: 1,
       },

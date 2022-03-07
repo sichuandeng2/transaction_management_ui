@@ -16,7 +16,7 @@
           </el-menu-item>
           <el-sub-menu index="/materialPurchase">
             <template #title>
-              <el-icon><home-filled /></el-icon>
+              <el-icon><Goods /></el-icon>
               <span>物资购买</span>
             </template>
             <el-menu-item index="/materialPurchase/purchaseMaterials" >
@@ -24,11 +24,11 @@
               <span class="none-select">待购物资</span>
             </el-menu-item>
             <el-menu-item index="/materialPurchase" >
-              <el-icon><shopping-cart /></el-icon>
+              <el-icon><Bell/></el-icon>
               <span class="none-select">发布待购</span>
             </el-menu-item>
             <el-menu-item index="/materialPurchase/AlreadyBought" >
-              <el-icon><shopping-cart /></el-icon>
+              <el-icon><List /></el-icon>
               <span class="none-select">我的购买</span>
             </el-menu-item>
           </el-sub-menu>
@@ -106,6 +106,7 @@
 </template>
 <script>
 import { defineComponent, ref, toRefs, reactive, useRouter } from "vue";
+import { ElLoading } from "element-plus";
 import {
   ArrowDownBold,
   Reading,
@@ -114,6 +115,9 @@ import {
   ShoppingCart,
   Money,
   Flag,
+  Goods,
+  List,
+  Bell,
   Menu as IconMenu,
 } from "@element-plus/icons";
 
@@ -127,6 +131,10 @@ export default defineComponent({
     ShoppingCart,
     Money,
     Flag,
+    Bell,
+    List,
+    Goods,
+    ElLoading
   },
   setup() {
     const state = reactive({
@@ -153,14 +161,22 @@ export default defineComponent({
     }
   },
   methods:{
+    
     // 获取用户信息
     getUserInfo() {
+
+      const loading = ElLoading.service({
+        fullscreen: false,
+        text: "服务连接中......",
+        background: "rgba(0, 0, 0, 0.8)",
+      });
       this.axios
         .get(this.axios.default.baseURL + "/Account/GetUserInfomation")
         .then(({data, code}) => {
             if (code == 200) {
               this.userInfo = data;
             }
+            loading.close();
         })
         .catch((err) => {
           console.log(err);

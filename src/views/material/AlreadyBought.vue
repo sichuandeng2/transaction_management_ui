@@ -11,16 +11,17 @@
           </el-form-item>
           <el-form-item label="状态">
             <el-select
-              v-model="search.status"
+              v-model="search.precedenceLevel"
               placeholder="请选择"
               v-on:change="research"
               filterable
               v-on:blur="selectBlur"
             >
               <el-option label="全部" value="0"></el-option>
-              <el-option label="待购" value="1"></el-option>
-              <el-option label="已购" value="2"></el-option>
-              <el-option label="作废" value="3"></el-option>
+              <el-option label="重要且紧急" value="1"></el-option>
+              <el-option label="不重要但紧急" value="2"></el-option>
+              <el-option label="重要但不急" value="3"></el-option>
+              <el-option label="不重要也不急" value="4"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
@@ -51,7 +52,7 @@
         <el-table-column prop="actualLocation" label="购买地点" />
         <el-table-column label="操作">
             <template #default="scope">
-                <el-button type="text" @click="lookDetail(scope)">详情</el-button>
+                <el-button type="text" @click="lookDetail(scope.row)">详情</el-button>
                 <el-button type="text" @click="lookEntrust(scope.row.materialPurchaseViewModel)">委托</el-button>
             </template>
         </el-table-column>
@@ -139,6 +140,51 @@
           </el-form-item>
         </el-form>
       </el-dialog>
+      <el-dialog title="购置记录" v-model="isShowAlreadyBought"> 
+        <el-form>
+          <div style="display: flex">
+            <el-form-item label="物质名称" prop="materialName">
+              <el-input
+                v-model="detail.materialName"
+                placeholder="请输入物品名称"
+                disabled
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="物质类型">
+              <el-input
+                v-model="detail.modelNumber"
+                placeholder="请输入物品型号"
+                disabled
+              ></el-input>
+            </el-form-item>
+          </div>
+          <div style="display: flex">
+            <el-form-item label="购买数量" prop="quantityRequired">
+              <el-input
+                v-model.number="detail.actualQuantities"
+                placeholder="请输入数量" 
+                disabled
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="金额">
+              <el-input v-model="detail.actualPrice" placeholder="0.00" disabled>
+                <template #append>元</template>
+              </el-input>
+            </el-form-item>
+          </div>
+          <el-form-item label="地点">
+            <el-input
+              v-model="detail.suggestLocation"
+              placeholder="请输入建议地点"
+              disabled
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="购置日期"><p style="text-align:left;">{{this.detail.createTime}}</p></el-form-item>
+          <el-form-item>
+            <el-button @click="isShowAlreadyBought = false">取消</el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
     </template>
   </Layout>
 </template>
@@ -181,12 +227,14 @@ export default {
       },
       search: {
         materialName: "",
-        status: "0",
+        precedenceLevel: "0",
         pageSize: 10,
         pageIndex: 1
       },
+      detail: {},
       count:0,
-      isShowDialog:false
+      isShowDialog: false,
+      isShowAlreadyBought: false
     };
   },
   methods: {
@@ -242,6 +290,8 @@ export default {
     },
     lookDetail(item){
       console.log(item)
+      this.detail = item;
+      this.isShowAlreadyBought = true
     },
     lookEntrust(item){
         this.form = item;
