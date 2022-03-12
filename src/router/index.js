@@ -26,21 +26,30 @@ const routes = [
     children:[
       {
         // 发布待购
-        path:'/materialPurchase',
+        path:'/materialPurchase/index',
         name: 'MaterialPurchase',
-        component: MaterialPurchase
+        component: MaterialPurchase,
+        meta: {
+          activeMenu: '/materialPurchase',
+        }
       },
       {
         // 待购物质
         path:'/materialPurchase/purchaseMaterials',
         name: 'PurchaseMaterials',
-        component: PurchaseMaterials
+        component: PurchaseMaterials,
+        meta: {
+          activeMenu: '/materialPurchase'
+        }
       },
       {
         // 已购物质
         path:'/materialPurchase/AlreadyBought',
         name: 'AlreadyBought',
-        component: AlreadyBought
+        component: AlreadyBought,
+        meta: {
+          activeMenu: '/materialPurchase'
+        }
       },
     ]
   },

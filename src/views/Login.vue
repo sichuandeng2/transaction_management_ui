@@ -107,40 +107,24 @@ export default {
         validateCode:this.form.validateCode,
       }
       const loading = ElLoading.service({ fullscreen: true, fullscreen: false, text: "服务请求中......",background:"rgba(0, 0, 0, 0.8)" })
-      this.axios
-        .get(this.axios.default.baseURL + "/Account/Login", {params})
-        .then((result) => {
-          if (result.code == 1000) {
-            // 登录成功
-            localStorage["token"] = result.data;
-            this.$message({
-              message: "登录成功",
-              type: "success",
-              duration: 500,
-              onClose: () => {
-                this.$router.push("/");
-                loading.close();
-              },
-            });
-          } else {
-            this.$message({
-              message: result.message,
-              type: "error",
-              duration: 3000,
-            });
-            this.path =
-              this.axios.default.baseURL +
-              "/Account/GetValidateCode?t=" +
-              new Date().getTime();
+      // console.log(this.$http.get("/Account/Login",{params}))
+      
+      this.$http
+        .get("/Account/Login", {params})
+        .then(({message, code, data}) => {
+          this.$showMessage(code,message, ()=>{
+            if(code == 1000){
+              localStorage["token"] = data;
+              this.$router.push("/");
+              loading.close();
+            }
+          });
+            this.path = this.$http.baseURL + "/Account/GetValidateCode?t=" + new Date().getTime();
             loading.close();
-          }
         })
         .catch((err) => {
-          loading.close();
-          this.$message({
-            message: "链接服务器失败，请重新尝试。",
-            type: "error",
-          });
+          console.log(err)
+          // loading.close();
         });
     },
   },

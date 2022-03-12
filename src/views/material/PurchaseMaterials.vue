@@ -191,9 +191,9 @@ export default {
   methods: {
     // 获取购买记录
     getBuyMaterialListByPage() {
-      this.axios
+      this.$http
         .get(
-          `${this.axios.default.baseURL}/MaterialPurchase/GetWillBuyMateralLitByPage`,
+          `/MaterialPurchase/GetWillBuyMateralLitByPage`,
           { params: { ...this.search } }
         )
         .then(({ data, code, message, count }) => {
@@ -239,9 +239,9 @@ export default {
             text: "服务连接中......",
             background: "rgba(0, 0, 0, 0.8)",
           });
-          this.axios
+          this.$http
             .post(
-              `${this.axios.default.baseURL}/MaterialPurchase/BuyMateralPurchase`,
+              `/MaterialPurchase/BuyMateralPurchase`,
               { ...this.form }
             )
             .then(({ data, code, message }) => {

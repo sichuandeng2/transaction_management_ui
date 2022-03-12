@@ -2,37 +2,38 @@
   <div class="layout">
     <!-- 菜单栏模块 -->
     <el-row>
-      <el-col class="layout-menu" style="">
+      <el-col class="layout-menu">
         <el-menu
           active-text-color="var(--select-item-color)"
           background-color="#545c64"
-          :default-active="$route.path"
+          :default-active="navLeftActive"
           text-color="#fff"
           router
+          mode="vertical"
+          collapse
         >
-          <el-menu-item index="/"  >
+          <el-menu-item index="/">
             <el-icon><home-filled /></el-icon>
             <span class="none-select">主页</span>
           </el-menu-item>
-          <el-sub-menu index="/materialPurchase">
+          <el-sub-menu  index="/materialPurchase">
             <template #title>
-              <el-icon><Goods /></el-icon>
+              <el-icon :class="{'select-sub-menu' : isSelectSubMenu}"><Goods /></el-icon>
               <span>物资购买</span>
             </template>
+            <el-menu-item index="/materialPurchase/index" >
+              <el-icon><Bell/></el-icon>
+              <span class="none-select">发布待购</span>
+            </el-menu-item>
             <el-menu-item index="/materialPurchase/purchaseMaterials" >
               <el-icon><shopping-cart /></el-icon>
               <span class="none-select">待购物资</span>
-            </el-menu-item>
-            <el-menu-item index="/materialPurchase" >
-              <el-icon><Bell/></el-icon>
-              <span class="none-select">发布待购</span>
             </el-menu-item>
             <el-menu-item index="/materialPurchase/AlreadyBought" >
               <el-icon><List /></el-icon>
               <span class="none-select">我的购买</span>
             </el-menu-item>
           </el-sub-menu>
-
           <el-menu-item index="/projectManagement" >
             <el-icon><money /></el-icon>
             <span class="none-select">项目管理</span>
@@ -41,33 +42,6 @@
             <el-icon><flag /></el-icon>
             <span class="none-select">计划</span>
           </el-menu-item>
-          <!-- <el-sub-menu index="2">
-            <template #title>
-              <el-icon><home-filled /></el-icon>
-              <span>生活事务</span>
-            </template>
-            <el-menu-item index="2-1" @click="clickMenu">物质购买</el-menu-item>
-            <el-menu-item index="2-2" @click="clickMenu">车贷还款</el-menu-item>
-            <el-menu-item index="2-3" @click="clickMenu">节日度假</el-menu-item>
-          </el-sub-menu>
-          <el-sub-menu index="3">
-            <template #title>
-              <el-icon><office-building /></el-icon>
-              <span>工作事务</span>
-            </template>
-            <el-menu-item index="3-1">项目工程</el-menu-item>
-            <el-menu-item index="3-2">工作计划</el-menu-item>
-            <el-menu-item index="3-3">进度管理</el-menu-item>
-          </el-sub-menu>
-          <el-sub-menu index="4">
-            <template #title>
-              <el-icon><reading /></el-icon>
-              <span>学习事务</span>
-            </template>
-            <el-menu-item index="4-1">当前事务</el-menu-item>
-            <el-menu-item index="4-2">新增事务</el-menu-item>
-            <el-menu-item index="4-3">事务管理</el-menu-item>
-          </el-sub-menu> -->
         </el-menu>
       </el-col>
     </el-row>
@@ -155,23 +129,21 @@ export default defineComponent({
   },
   data(){
     return {
-       // 活动菜单栏
-      activeIndex: "/",
-      userInfo: "test"
+      userInfo: "test",
+      isSelectSubMenu: false
     }
   },
   methods:{
     
     // 获取用户信息
     getUserInfo() {
-
       const loading = ElLoading.service({
         fullscreen: false,
         text: "服务连接中......",
         background: "rgba(0, 0, 0, 0.8)",
       });
-      this.axios
-        .get(this.axios.default.baseURL + "/Account/GetUserInfomation")
+      this.$http
+        .get("/Account/GetUserInfomation")
         .then(({data, code}) => {
             if (code == 200) {
               this.userInfo = data;
@@ -186,6 +158,21 @@ export default defineComponent({
   mounted(){
     this.getUserInfo();
   },
+  computed:{
+    navLeftActive: function (){
+      const {meta, path} = this.$route;
+        // console.log(meta.activeMenu);
+      if(meta.activeMenu == "/materialPurchase"){
+        // console.log("当前为meta值")
+        this.isSelectSubMenu = true;
+        // return meta.activeMenu;
+      }
+      else{
+        this.isSelectSubMenu = false
+      }
+      return path;
+    }
+  },
   name: "Layout",
 });
 </script>
@@ -195,10 +182,13 @@ export default defineComponent({
   background-color: #eeeeee;
   .layout-menu {
     height: 100vh;
-    width: 200px;
+    width: 64px;
     background: #545c64;
     position: sticky;
     top: 0;
+    .select-sub-menu{
+      color: var(--select-item-color);
+    }
     .el-menu {
       border: none;
     }
@@ -206,7 +196,7 @@ export default defineComponent({
 
   // 内容页布局
   .layout-page {
-    width: calc(100% - 200px);
+    width: calc(100% - 64px);
 
     // 页头
     .layout-page-header {

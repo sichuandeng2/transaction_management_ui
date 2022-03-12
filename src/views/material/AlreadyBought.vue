@@ -239,10 +239,10 @@ export default {
   },
   methods: {
     // 获取购买记录
-    getBuyMaterialListByPage() {
-      this.axios
+    getAlreadyBoughtMaterialListByPage() {
+      this.$http
         .get(
-          `${this.axios.default.baseURL}/MaterialPurchase/GetBuyMaterialListByPage`,
+          `/MaterialPurchase/GetAlreadyBoughtMaterialListByPage`,
           { params: { ...this.search } }
         )
         .then(({ data, code, message, count }) => {
@@ -260,34 +260,19 @@ export default {
         this.searchMark = null;
       }
       this.searchMark = window.setTimeout(() => {
-        this.getBuyMaterialListByPage();
+        this.getAlreadyBoughtMaterialListByPage();
       }, 1000);
     },
     selectBlur() {},
     getCurrentPageIndex(item) {
       this.search.pageIndex = item;
-      this.getBuyMaterialListByPage();
+      this.getAlreadyBoughtMaterialListByPage();
     },
     handleChange(item) {
       this.search.pageSize = item;
-      this.getBuyMaterialListByPage();
+      this.getAlreadyBoughtMaterialListByPage();
     },
-    // 显示消息
-    showMessage(code, message, fun, duration = 1500) {
-      let statu = "";
-      if (code == 200) {
-        statu = "success";
-        duration = 500;
-      } else {
-        statu = "error";
-      }
-      this.$message({
-        message: message,
-        type: statu,
-        duration: duration,
-        onClose: fun,
-      });
-    },
+
     lookDetail(item){
       console.log(item)
       this.detail = item;
@@ -299,7 +284,7 @@ export default {
     }
   },
   mounted() {
-    this.getBuyMaterialListByPage();
+    this.getAlreadyBoughtMaterialListByPage();
   },
 };
 </script>

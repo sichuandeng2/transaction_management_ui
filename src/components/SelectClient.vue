@@ -46,9 +46,9 @@ import {Search} from "@element-plus/icons";
                 }, 1000)
             },
             getSelectClientList(){
-                this.axios
+                this.$http
                 .get(
-                    `${this.axios.default.baseURL}/Account/GetUserInfomationByList`,
+                    `/Account/GetUserInfomationByList`,
                     {params: {nickName:this.searchClient}}
                 )
                 .then(({ data, code, message }) => {
@@ -86,7 +86,6 @@ import {Search} from "@element-plus/icons";
         mounted(){
             this.getSelectClientList();
         },
-
     }
 </script>
 

@@ -230,9 +230,9 @@ export default {
             text: "服务连接中......",
             background: "rgba(0, 0, 0, 0.8)",
           });
-          this.axios
+          this.$http
             .post(
-              `${this.axios.default.baseURL}/MaterialPurchase/InsertMaterialPurchase`,
+              `/MaterialPurchase/InsertMaterialPurchase`,
               { ...this.form }
             )
             .then(({ data, code, message }) => {
@@ -263,9 +263,8 @@ export default {
     },
     // 获取待购信息
     getMaterialPurchase() {
-      this.axios
-      .get(
-        `${this.axios.default.baseURL}/MaterialPurchase/GetMaterialPurchaseByPage`,
+      this.$http
+      .get('/MaterialPurchase/GetMaterialPurchaseByPage',
         { params: { ...this.search }}
       )
       .then(({ data, code, message, count }) => {
@@ -292,11 +291,8 @@ export default {
         text: "服务连接中......",
         background: "rgba(0, 0, 0, 0.8)",
       });
-      this.axios
-        .delete(
-          `${this.axios.default.baseURL}/MaterialPurchase/DeleteMaterialPurchase`,
-          { params: { gid: guid } }
-        )
+      this.$http
+        .delete(`/MaterialPurchase/DeleteMaterialPurchase`, { params: { gid: guid } })
         .then(({ code, message }) => {
           this.showMessage(code, message, () => {
             if(code==200) this.getMaterialPurchase();
@@ -396,7 +392,7 @@ export default {
         text: "服务连接中......",
         background: "rgba(0, 0, 0, 0.8)",
       });
-      this.axios.put(`${this.axios.default.baseURL}/MaterialPurchase/ChangeMaterialPurchaseStatus`, {kid:this.currentRow.kid, status:statu})
+      this.$http.put(`/MaterialPurchase/ChangeMaterialPurchaseStatus`, {kid:this.currentRow.kid, status:statu})
       .then(({code, message}) => {
         this.showMessage(code, message, () => {
           if(code == 200) this.getMaterialPurchase();
