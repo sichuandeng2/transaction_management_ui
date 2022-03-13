@@ -161,11 +161,8 @@ export default defineComponent({
   computed:{
     navLeftActive: function (){
       const {meta, path} = this.$route;
-        // console.log(meta.activeMenu);
       if(meta.activeMenu == "/materialPurchase"){
-        // console.log("当前为meta值")
         this.isSelectSubMenu = true;
-        // return meta.activeMenu;
       }
       else{
         this.isSelectSubMenu = false

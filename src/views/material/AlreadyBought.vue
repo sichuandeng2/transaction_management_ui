@@ -25,7 +25,15 @@
             </el-select>
           </el-form-item>
         </el-form>
+        <!-- <el-button @Click="inportReadyInfo" style="height:40px">导入</el-button> -->
         <!-- <el-button type="primary" style="height: 16px">新增物资</el-button> -->
+        <el-upload 
+        :action="$http.baseURL + '/MaterialPurchase/UploadAlreadyMoughtMateral'" 
+        method="post"
+        :headers="headers"
+        :on-success="uploadSuccess">
+          <el-button type="primary">导入</el-button>
+        </el-upload>
       </div>
       <el-divider class="hir-line"></el-divider>
 
@@ -53,7 +61,7 @@
         <el-table-column label="操作">
             <template #default="scope">
                 <el-button type="text" @click="lookDetail(scope.row)">详情</el-button>
-                <el-button type="text" @click="lookEntrust(scope.row.materialPurchaseViewModel)">委托</el-button>
+                <el-button type="text" v-if="scope.row.materialPurchaseViewModel != null"  @click="lookEntrust(scope.row.materialPurchaseViewModel)">委托</el-button>
             </template>
         </el-table-column>
       </el-table>
@@ -70,7 +78,7 @@
           :total="count"
         ></el-pagination>
       </div>
-            <!-- 弹出层 -->
+      <!-- 弹出层 -->
       <el-dialog title="委托单" v-model="isShowDialog" width="680px">
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
           <div >
@@ -191,7 +199,7 @@
 
 <script>
 import Layout from "../../components/Layout.vue";
-import { ElLoading, ElMessageBox } from "element-plus";
+import { ElLoading, ElMessageBox, UploadUserFile, UplodaFile } from "element-plus";
 export default {
   name: "AlreadyBought",
   components: {
@@ -234,7 +242,10 @@ export default {
       detail: {},
       count:0,
       isShowDialog: false,
-      isShowAlreadyBought: false
+      isShowAlreadyBought: false,
+      headers:{
+        authorization: "bearer " + localStorage["token"]
+      }
     };
   },
   methods: {
@@ -250,7 +261,7 @@ export default {
             this.tableData = data;
             this.count = count;
           }
-          this.showMessage(code, message, () => {});
+          // this.$showMessage(code, message);
         });
     },
     // 重新搜索数据列表集合
@@ -281,6 +292,12 @@ export default {
     lookEntrust(item){
         this.form = item;
         this.isShowDialog = true;
+    },
+    // 导入
+    uploadSuccess({code, message}, file, files){
+      this.$showMessage(code,message,()=> {
+        this.getAlreadyBoughtMaterialListByPage();
+      })
     }
   },
   mounted() {

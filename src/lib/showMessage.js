@@ -8,7 +8,6 @@ const install = function (vue){
         // let duration = 3000
         if (code == 200 || code == 1000) {
             statu = "success";
-            duration = 500;
         } else {
             statu = "error";
         }

@@ -3,7 +3,7 @@ import { stringifyQuery } from 'vue-router';
 const baseURL = "http://localhost:5000/api"
 // 指定默认地址
 axios.defaults.baseURL = baseURL;
-axios.defaults.timeout = 5000;
+axios.defaults.timeout = 10000;
 // axios.defaults.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
 
 // 指定请求拦截器
