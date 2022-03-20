@@ -42,6 +42,20 @@
             <el-icon><flag /></el-icon>
             <span class="none-select">计划</span>
           </el-menu-item>
+          <el-sub-menu index="/user">
+            <template #title>
+              <el-icon :class="{'select-sub-menu' : isSelectSubMenu}"><Goods /></el-icon>
+              <span>用户</span>
+            </template>
+            <el-menu-item index="/user/index">
+              <el-icon><Bell/></el-icon>
+              <span class="none-select">修改用户</span>
+            </el-menu-item>
+            <el-menu-item index="/user/userManagement">
+              <el-icon><Bell/></el-icon>
+              <span class="none-select">用户管理</span>
+            </el-menu-item>
+          </el-sub-menu>
         </el-menu>
       </el-col>
     </el-row>
@@ -147,6 +161,8 @@ export default defineComponent({
         .then(({data, code}) => {
             if (code == 200) {
               this.userInfo = data;
+              // console.log(data);
+              sessionStorage["userInfomation"] = JSON.stringify(data);
             }
             loading.close();
         })

@@ -7,8 +7,10 @@ import Material from '../views/material/Material.vue'
 import MaterialPurchase from '../views/material/MaterialPurchase.vue'
 import PurchaseMaterials from '../views/material/PurchaseMaterials.vue'
 import AlreadyBought from '../views/material/AlreadyBought.vue'
+import UserLayout from '../views/user/UserLayout.vue'
+import Personal from '../views/user/Personal.vue'
+import UserManagement from'../views/user/UserManagement.vue'
 const routes = [
-
   {
     path: '/',
     name: 'Home',
@@ -70,6 +72,24 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+  },
+  {
+    path: '/user',
+    name: 'user',
+    component: UserLayout,
+    children:[
+      {
+        path: '/user/index',
+        name: 'updateUser',
+        component: Personal,
+      },
+      {
+        path: '/user/userManagement',
+        name: 'userManagement',
+        component: UserManagement
+      }
+    ]
+
   }
 ]
 
