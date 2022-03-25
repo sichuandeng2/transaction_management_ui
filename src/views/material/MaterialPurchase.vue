@@ -56,8 +56,10 @@
       <el-dialog title="新增" v-model="dialogVisible" width="680px">
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
           <div  @click="this.isSelectClient = true" class="cursor-pointer" >
-            <el-form-item label="委托" prop="userGid"><el-avatar :size="40" :src="form.userInfo.userAvatarUrl" >{{form.userInfo.userAvatarUrl==''?"添加":""}}</el-avatar>
-            <div class="none-select">{{form.userInfo.nickName}}</div></el-form-item>
+            <el-form-item label="委托" prop="userGid">
+              <el-avatar :size="40" :src="form.userInfo.userAvatarUrl" >{{form.userInfo.userAvatarUrl==''?"添加":""}}</el-avatar>
+              <div class="none-select">{{form.userInfo.nickName}}</div>
+            </el-form-item>
           </div>
           <div style="display: flex">
             <el-form-item label="物质名称" prop="materialName">

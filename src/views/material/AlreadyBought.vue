@@ -196,7 +196,6 @@
     </template>
   </Layout>
 </template>
-
 <script>
 import Layout from "../../components/Layout.vue";
 import { ElLoading, ElMessageBox, UploadUserFile, UplodaFile } from "element-plus";
