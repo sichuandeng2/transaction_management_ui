@@ -30,18 +30,19 @@ axios.interceptors.response.use(
         return response;
     },
     err => {
-        console.log(err)
-        let regExp = RegExp(/Network Error/)
         // console.log(err.match(regExp));
         // console.log(err.search("Error"));
         let status = err.response.status;
+        
+        // if(!status) return {message: err.response.statusText, code: status}
         switch(status){
             case 401:
                 localStorage.clear("token")
                 window.location.href = "/login"
                 break;   
             case 500:
-                window.alert("系统内部错误");
+                // window.alert("系统内部错误");
+                return {message: err.response.statusText, code: status}
                 break;
         }
     }

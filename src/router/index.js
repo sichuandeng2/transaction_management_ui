@@ -82,11 +82,17 @@ const routes = [
         path: '/user/index',
         name: 'updateUser',
         component: Personal,
+        meta:{
+          activeMenu: '/user'
+        }
       },
       {
         path: '/user/userManagement',
         name: 'userManagement',
-        component: UserManagement
+        component: UserManagement,
+        meta:{
+          activeMenu: '/user'
+        }
       }
     ]
 

@@ -2,16 +2,7 @@
   <Layout>
 
     <template v-slot:inner>
-      <div class="home">
-      <div>
-        <el-input v-model="search" placeholder="请输入事务名称" />
-      </div>
-      <el-table :data="tableData">
-        <el-table-column prop="date" label="Date" width="180" />
-        <el-table-column prop="name" label="Name" width="180" />
-        <el-table-column prop="address" label="Address" />
-      </el-table>
-    </div>
+     <h1>首页待定</h1>
     </template>
   </Layout>
 </template>

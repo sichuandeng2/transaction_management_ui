@@ -44,12 +44,12 @@
           </el-menu-item>
           <el-sub-menu index="/user">
             <template #title>
-              <el-icon :class="{'select-sub-menu' : isSelectSubMenu}"><Goods /></el-icon>
+              <el-icon :class="{'select-sub-menu' : isSelectUser}"><UserFilled /></el-icon>
               <span>用户</span>
             </template>
             <el-menu-item index="/user/index">
               <el-icon><Bell/></el-icon>
-              <span class="none-select">修改用户</span>
+              <span class="none-select">个人信息</span>
             </el-menu-item>
             <el-menu-item index="/user/userManagement">
               <el-icon><Bell/></el-icon>
@@ -74,7 +74,7 @@
             </template>
             <div class="avatarInfo">
               <div @click="exit" class="none-select">退出</div>
-              <div class="none-select">编辑个人信息</div>
+              <div class="none-select" @click="this.$router.push({path:'/user/index'})">个人信息</div>
             </div>
           </el-popover>
         </div>
@@ -106,6 +106,7 @@ import {
   Goods,
   List,
   Bell,
+  UserFilled,
   Menu as IconMenu,
 } from "@element-plus/icons";
 
@@ -122,6 +123,7 @@ export default defineComponent({
     Bell,
     List,
     Goods,
+    UserFilled,
     ElLoading
   },
   setup() {
@@ -143,8 +145,9 @@ export default defineComponent({
   },
   data(){
     return {
-      userInfo: "test",
-      isSelectSubMenu: false
+      userInfo: {},
+      isSelectSubMenu: false,
+      isSelectUser: false
     }
   },
   methods:{
@@ -161,14 +164,18 @@ export default defineComponent({
         .then(({data, code}) => {
             if (code == 200) {
               this.userInfo = data;
-              // console.log(data);
               sessionStorage["userInfomation"] = JSON.stringify(data);
             }
-            loading.close();
         })
         .catch((err) => {
           console.log(err);
+          this.$message({                  
+            message: "服务器异常。",
+            type: "error",
+            duration: 3000,
+          })
         });
+        loading.close();
     },
   },
   mounted(){
@@ -180,8 +187,12 @@ export default defineComponent({
       if(meta.activeMenu == "/materialPurchase"){
         this.isSelectSubMenu = true;
       }
+      else if(meta.activeMenu == "/user"){
+        this.isSelectUser = true;
+      }
       else{
         this.isSelectSubMenu = false
+        this.isSelectUser = false
       }
       return path;
     }

@@ -9,18 +9,18 @@
                     <p>账号：{{userInfomation.userName}}</p>
                     <p>用户名：{{userInfomation.nickName}}</p>
                     <p>角色: {{userInfomation.roles == null ? '未知' : userInfomation.roles}}</p>
-                    <p>性别：{{userInfomation.userGender == 1 ? '男' : '女'}}</p>
+                    <p>性别：{{userInfomation.userGender == 0 ? '未知' : userInfomation.userGender == 1 ? '男' : '女'}}</p>
                     <p>电话：{{userInfomation.phone == null ? '未知': userInfomation.phone}}</p>
-                    <p>邮箱：{{userInfomation.email == null ? '未知' : userInfomation.email}}</p>
-                    <p>QQ: {{userInfomation.qq == null ? '未知': userInfomation.qq}}</p>
+                    <p>邮箱：{{userInfomation.email == null || userInfomation.email == "" ? '未知' : userInfomation.email}}</p>
+                    <p>QQ: {{userInfomation.qq == null || userInfomation.qq == "" ? '未知': userInfomation.qq}}</p>
                     <p>微信：{{userInfomation.wechat == null ? '未知' : userInfomation.wechat}}</p>
                 </div>
                 <el-button type="primary" @click="editeUser">编辑</el-button>
             </div>
         </template>
     </Layout>
-			<!-- 编辑弹出层 -->
-      <el-dialog title="编辑" v-model="isShowEditeUserInfo" width="680px">
+		<!-- 编辑弹出层 -->
+		<el-dialog title="编辑" v-model="isShowEditeUserInfo" width="680px">
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
           <div  @click="this.isSelectClient = true" class="cursor-pointer" >
             <el-form-item label="头像" prop="userGid">
@@ -136,11 +136,12 @@ export default {
             .then(({ code, message }) => {
               if (code == 200) {
                 this.$message({
-                  message: this.operateName + "成功",
+                  message: message,
                   type: "success",
                   duration: 500,
                   onClose: () => {
-										sessionStorage["userInfomation"] = JSON.stringify(this.userInfomation)
+										sessionStorage["userInfomation"] = JSON.stringify(this.userInfomation);
+                    this.isShowEditeUserInfo = false;
                   },
                 });
               } else {
