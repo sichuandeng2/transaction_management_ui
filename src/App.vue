@@ -4,7 +4,32 @@
 <script>
 
 export default {
+  methods:{
+    bingDateFormat(){
+      Date.prototype.format = function(format){
+        let matString = {
+          "yyyy": this.getFullYear(),
+          "MM": this.getMonth() + 1,
+          "dd": this.getDate(),
+          "hh": this.getHours(),
+          "mm": this.getMinutes(),
+          "ss": this.getSeconds()
+        }
+        if(/yyyy/.test(format))format = format.replace(/yyyy/,matString.yyyy)
+        for (const key in matString) {
+          if(key == 'yyyy') continue;
+          if(new RegExp("("+ key +")").test(format)){
+            format = format.replace(RegExp.$1, matString[key] > 9 ? matString[key]: "0" + matString[key])
+          }
+        }
+        return format;
+      }
+    }
+  },
+  mounted(){
+    this.bingDateFormat();
   }
+}
 </script>
 <style>
 *{

@@ -2,10 +2,8 @@
 
 
 const install = function (vue){
-    vue.config.globalProperties.$showMessage = function (code, message, fun, duration = 3000){
-        console.log(message)
+    vue.config.globalProperties.$showMessage = function (code, message, fun, duration = 1200){
         let statu = "";
-        // let duration = 3000
         if (code == 200 || code == 1000) {
             statu = "success";
         } else {
@@ -17,7 +15,6 @@ const install = function (vue){
             duration: duration,
             onClose: fun,
         });
-        // window.alert("show message info")
     }
 }
 export default install

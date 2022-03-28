@@ -145,8 +145,8 @@ export default {
   name: "PurchaseMaterials",
   components: {
     Layout,
-	ElLoading,
-	ElMessageBox
+    ElLoading,
+    ElMessageBox
   },
   data() {
     return {

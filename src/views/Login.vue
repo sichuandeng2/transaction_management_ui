@@ -112,7 +112,7 @@ export default {
       this.$http
         .get("/Account/Login", {params})
         .then(({message, code, data}) => {
-          this.$showMessage(code,message, ()=>{
+          this.$showMessage(code, message, ()=>{
             if(code == 1000){
               localStorage["token"] = data;
               this.$router.push("/");
