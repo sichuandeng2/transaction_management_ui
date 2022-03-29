@@ -2,10 +2,11 @@
 
 
 const install = function (vue){
-    vue.config.globalProperties.$showMessage = function (code, message, fun, duration = 1200){
+    vue.config.globalProperties.$showMessage = function (code, message, fun, duration = 3000){
         let statu = "";
         if (code == 200 || code == 1000) {
             statu = "success";
+			duration = 500;
         } else {
             statu = "error";
         }

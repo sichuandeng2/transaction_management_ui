@@ -5,6 +5,7 @@ import store from './store'
 import elementplus from 'element-plus'
 import axios from './lib/axios'
 import ShowMessage from './lib/showMessage'
+import 'default-passive-events'
 
 // 引入css样式
 import "element-plus/theme-chalk/index.css"

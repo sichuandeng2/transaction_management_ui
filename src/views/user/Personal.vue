@@ -8,7 +8,7 @@
                     <div class="none-select">{{userInfomation.nickName}}</div>
                     <p>账号：{{userInfomation.userName}}</p>
                     <p>用户名：{{userInfomation.nickName}}</p>
-                    <p>角色: {{userInfomation.roles == null ? '未知' : userInfomation.roles}}</p>
+                    <p>角色: {{userInfomation.roles == null ? '未知' : userInfomation.roles.join(' 及 ')}}</p>
                     <p>性别：{{userInfomation.userGender == 0 ? '未知' : userInfomation.userGender == 1 ? '男' : '女'}}</p>
                     <p>电话：{{userInfomation.phone == null ? '未知': userInfomation.phone}}</p>
                     <p>邮箱：{{userInfomation.email == null || userInfomation.email == "" ? '未知' : userInfomation.email}}</p>
@@ -92,24 +92,24 @@ export default {
                 phone: '',
                 email: '',
             },
-						isShowEditeUserInfo: false,
-						form: {},// 对表单的验证规则
-						rules: {
-							qq: [
-								{ pattern: /^[1-9][0-9]{4,14}$/, message: '请输入有效的QQ账号' }
-							],
-							phone: [
-								{ required: true, message: "手机号能为空", trigger: "blur" },
-								{ pattern: /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/, message: "请输入有效电话号码", trigger: "blur" },
-							],
-							nickName: [
-								{ required: true, message: "用户昵称不能为空", trigger: "blur" },
-								{ min: 3, message: "用户名不能短于3个字符", trigger: "blur" },
-							],
-							email:[
-								{ pattern: /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/, message: "请输入有效的邮箱地址", trigger: "blur" },
-							],
-						},
+			isShowEditeUserInfo: false,
+			form: {},// 对表单的验证规则
+			rules: {
+				qq: [
+					{ pattern: /^[1-9][0-9]{4,14}$/, message: '请输入有效的QQ账号' }
+				],
+				phone: [
+					{ required: true, message: "手机号能为空", trigger: "blur" },
+					{ pattern: /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/, message: "请输入有效电话号码", trigger: "blur" },
+				],
+				nickName: [
+					{ required: true, message: "用户昵称不能为空", trigger: "blur" },
+					{ min: 3, message: "用户名不能短于3个字符", trigger: "blur" },
+				],
+				email:[
+					{ pattern: /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/, message: "请输入有效的邮箱地址", trigger: "blur" },
+				],
+			},
         }
     },
     mounted(){

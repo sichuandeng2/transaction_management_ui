@@ -402,7 +402,7 @@ export default {
         }, 3000);
       })
     }
-    ,elAlert(operateName,action){
+    ,elAlert(operateName, action){
       ElMessageBox
       .confirm(`您确定 ${operateName} 物质名称为：${this.currentRow.materialName} 的数据吗？`,"系统提示",
         {
