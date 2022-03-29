@@ -68,6 +68,7 @@
 						{{getCycleText(scope.row.cycleType)}}
 					</template>
 				</el-table-column>
+				<el-table-column prop="createUserName" label="创建用户" />
 				<el-table-column prop="createTime" label="创建时间" />
 				<el-table-column label="操作">
 					<template #default="scope">
