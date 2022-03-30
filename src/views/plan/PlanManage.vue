@@ -102,9 +102,9 @@
 								<el-option label="每年" value="6"></el-option>
 							</el-select>
 						</el-form-item>
-						<el-form-item label="时间" >
+						<el-form-item label="时间" prop="selectedTime">
 							<div class="block">
-								<el-date-picker v-model="selectedTime" type="datetime" placeholder="选择到期的时间"
+								<el-date-picker v-model="formData.selectedTime" type="datetime" placeholder="选择到期的时间"
 									format="MM-DD HH:mm dddd" />
 							</div>
 						</el-form-item>
@@ -130,12 +130,12 @@
 </template>
 
 <script>
-	import Layout from '../components/Layout.vue'
+	import Layout from '../../components/Layout.vue'
 	import {
 		ElMessageBox
 	} from "element-plus";
 	export default {
-		name: 'plan',
+		name: 'planManage',
 		components: {
 			Layout,
 			ElMessageBox
@@ -158,7 +158,8 @@
 					planType: '1',
 					cycleType: '0',
 					timeZone: 0,
-					remark: ''
+					remark: '',
+					selectedTime:null,
 				},
 				rules: {
 					planName: [
@@ -173,15 +174,14 @@
 							trigger: "blur"
 						},
 					],
-					// timeZone: [
-					// 	{
-					// 		required: true,
-					// 		message: "计划的指定时间不能为空",
-					// 		trigger: "blur"
-					// 	},
-					// ]
+					selectedTime: [
+						{
+							required: true,
+							message: "计划的指定时间不能为空",
+							trigger: "blur"
+						},
+					]
 				},
-				selectedTime: '',
 				isEdit: false,
 				searchMark: null
 			}
@@ -192,22 +192,15 @@
 				this.$http
 					.get(
 						`/plan/getPlanListByPage`, {
-							params: {
-								...this.search
-							}
+							params: {...this.search}
 						}
 					)
-					.then(({
-						data,
-						code,
-						message,
-						count
-					}) => {
+					.then(({data, code, count, message}) => {
 						if (code == 200) {
 							this.tableData = data;
 							this.count = count;
 						}
-						// this.$showMessage(code, message);
+						this.$showMessage(code, message)
 					});
 			},
 			// 获取计划类型名称
@@ -299,10 +292,8 @@
 				this.formData.planName = row.planName
 				this.formData.kid = row.kid
 				this.formData.remark = row.remark
-				this.selectedTime = new Date(row.timeZone)
-				console.log(row.timeZone)
-				this.timeZone = row.timeZone
-				//this.changeTimmer(row.planType)
+				this.formData.selectedTime = new Date(row.timeZone)
+				this.formData.timeZone = row.timeZone
 				this.isShowEdteOrInsert = true
 			},
 			// 删除任务
@@ -338,10 +329,9 @@
 			},
 			// 提交表单
 			onSubmit(formName) {
-				this.formData.timeZone = this.selectedTime.getTime()
-				console.log(this.selectedTime)
 				this.$refs[formName].validate(valid =>{
-					if(valid){
+					if(valid || !!this.formData.selectedTime){
+						this.formData.timeZone = this.formData.selectedTime.getTime()
 						if(this.isEdit){
 							this.$http.put('/Plan/UpdatePlan', {...this.formData})
 							.then(({code, message}) => {
@@ -354,7 +344,6 @@
 							})
 						}
 						else{
-							console.log("tset")
 							this.$http.post('/Plan/InsertPlan', {...this.formData})
 							.then(({code, message})=>{
 								this.$showMessage(code, message, () => {
@@ -373,7 +362,8 @@
 				})
 			},
 			changeCycleType(item) {
-				// this.changeTimmer(item)
+				this.formData.selectedTime = null
+				this.formData.timeZone = 0
 				this.selectedTime = ''
 			},
 			changeTimmer(index) {

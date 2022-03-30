@@ -77,7 +77,7 @@ import {Search} from "@element-plus/icons";
             },
             clickUserListItem(item){
                 this.$parent.$parent.form.userInfo = item;
-                this.$parent.$parent.form.UserGid = item.gid;
+                this.$parent.$parent.form.userGid = item.kid;
                 this.$parent.$parent.isSelectClient = false;
                 this.searchClient=""
                 this.getSelectClientList()

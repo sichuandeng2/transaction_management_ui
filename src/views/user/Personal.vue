@@ -113,7 +113,13 @@ export default {
         }
     },
     mounted(){
-			this.form = this.userInfomation = JSON.parse(sessionStorage["userInfomation"])
+      let userInformationJson = sessionStorage["userInfomation"];
+      if(userInformationJson != null){
+        this.form = this.userInfomation = JSON.parse(sessionStorage["userInfomation"])
+      }
+      else{
+        console.log('该异常带处理');
+      }
     },
 		methods:{
 			editeUser(){
@@ -134,23 +140,10 @@ export default {
               { ...this.form }
             )
             .then(({ code, message }) => {
-              if (code == 200) {
-                this.$message({
-                  message: message,
-                  type: "success",
-                  duration: 500,
-                  onClose: () => {
-										sessionStorage["userInfomation"] = JSON.stringify(this.userInfomation);
+              this.$showMessage(code, message, ()=> {
+                    sessionStorage["userInfomation"] = JSON.stringify(this.userInfomation);
                     this.isShowEditeUserInfo = false;
-                  },
-                });
-              } else {
-                this.$message({
-                  message: message,
-                  type: "error",
-                  duration: 3000,
-                });
-              }
+              })
               loading.close();
             });
           this.dialogVisible = false;

@@ -43,12 +43,38 @@
 						</el-icon>
 						<span class="none-select">项目管理</span>
 					</el-menu-item>
-					<el-menu-item index="/plan">
+					<el-sub-menu index="/plan">
+						<template #title>
+							<el-icon :class="{'select-sub-menu' : isSelectPlan}">
+								<flag />
+							</el-icon>
+							<span class="none-select">计划</span>
+						</template>
+						<el-menu-item index="/plan/planManage">
+							<el-icon>
+								<Bell />
+							</el-icon>
+							<span class="none-select">计划管理</span>
+						</el-menu-item>
+						<el-menu-item index="/plan/operatePlan">
+							<el-icon>
+								<Bell />
+							</el-icon>
+							<span class="none-select">操作计划</span>
+						</el-menu-item>
+						<el-menu-item index="/plan/myPlan">
+							<el-icon>
+								<UserFilled />
+							</el-icon>
+							<span class="none-select">我的计划</span>
+						</el-menu-item>
+					</el-sub-menu>
+					<!-- <el-menu-item index="/plan">
 						<el-icon>
 							<flag />
 						</el-icon>
 						<span class="none-select">计划</span>
-					</el-menu-item>
+					</el-menu-item> -->
 					<el-sub-menu index="/user">
 						<template #title>
 							<el-icon :class="{'select-sub-menu' : isSelectUser}">
@@ -169,7 +195,8 @@
 				userInfo: {},
 				isSelectSubMenu: false,
 				isSelectUser: false,
-				isShowManageMenu: false
+				isShowManageMenu: false,
+				isSelectPlan: false,
 			}
 		},
 		methods: {
@@ -202,7 +229,14 @@
 			},
 		},
 		mounted() {
-			this.getUserInfo();
+			let userInforationJson = sessionStorage["userInfomation"];
+			if(userInforationJson == null){
+				this.getUserInfo();
+			}
+			else{
+				this.userInfo = JSON.parse(userInforationJson);
+			}
+			
 		},
 		computed: {
 			navLeftActive: function() {
@@ -214,9 +248,13 @@
 					this.isSelectSubMenu = true;
 				} else if (meta.activeMenu == "/user") {
 					this.isSelectUser = true;
-				} else {
+				} else if( meta.activeMenu == "/plan") {
+					this.isSelectPlan = true
+				}
+				else {
 					this.isSelectSubMenu = false
 					this.isSelectUser = false
+					this.isSelectPlan = false
 				}
 				return path;
 			}

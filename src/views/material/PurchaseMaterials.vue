@@ -191,6 +191,11 @@ export default {
   methods: {
     // 获取购买记录
     getBuyMaterialListByPage() {
+      const loading = ElLoading.service({
+        fullscreen: false,
+        text: "服务连接中......",
+        background: "rgba(0, 0, 0, 0.8)",
+      });
       this.$http
         .get(
           `/MaterialPurchase/GetWillBuyMateralLitByPage`,
@@ -201,7 +206,8 @@ export default {
             this.tableData = data;
             this.count = count;
           }
-          this.showMessage(code, message, () => {});
+          loading.close()
+          this.$showMessage(code, message);
         });
     },
     // 重新搜索数据列表集合
@@ -224,12 +230,10 @@ export default {
       this.getBuyMaterialListByPage();
     },
     clickDetail(item) {
-      console.log(item);
       this.form = item;
       this.isShowDialog = true;
     },
 	purchase(formName){
-		console.log(this.form)
 		this.form.precedenceLevel = 0
 		this.form.status = 2
 		this.$refs[formName].validate((valid) => {
@@ -245,47 +249,22 @@ export default {
               { ...this.form }
             )
             .then(({ data, code, message }) => {
-              if (code == 200) {
-                this.$message({
-                  message: message,
-                  type: "success",
-                  duration: 500,
-                  onClose: () => {
-                    this.getBuyMaterialListByPage();
-                  },
-                });
-              } else {
-                this.$message({
-                  message: message,
-                  type: "error",
-                  duration: 3000,
-                });
-              }
               loading.close();
+              this.$showMessage(code, message, ()=> {
+                if(code == 200)
+                {
+                  this.getBuyMaterialListByPage()
+                  this.isShowDialog = false;
+                }
+              })
             });
-          this.isShowDialog = false;
+          
         } else {
-		  console.log("表单验证失败")
+		      console.log("表单验证失败")
           return false;
         }
       });
-	},
-	    // 显示消息
-    showMessage(code, message, fun, duration = 1500) {
-      let statu = "";
-      if (code == 200) {
-        statu = "success";
-        duration = 500;
-      } else {
-        statu = "error";
-      }
-      this.$message({
-        message: message,
-        type: statu,
-        duration: duration,
-        onClose: fun,
-      });
-    },
+	  },
   },
   mounted() {
     this.getBuyMaterialListByPage();

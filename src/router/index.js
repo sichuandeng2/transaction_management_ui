@@ -1,7 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
-import Plan from '../views/Plan.vue'
+import PlanIndex from '../views/plan/PlanIndex.vue'
+import PlanManage from '../views/plan/PlanManage.vue'
+import MyPlan from '../views/plan/MyPlan.vue'
+import OperatePlan from '../views/plan/OperatePlan.vue'
 import ProjectManagement from '../views/ProjectManagement.vue'
 import Material from '../views/material/Material.vue'
 import MaterialPurchase from '../views/material/MaterialPurchase.vue'
@@ -63,7 +66,33 @@ const routes = [
   {
     path: '/plan',
     name: 'Plan',
-    component: Plan
+    component: PlanIndex,
+    children:[
+      {
+        path: '/plan/planManage',
+        name: 'planManage',
+        component: PlanManage,
+        meta:{
+          activeMenu: '/plan'
+        }
+      },
+      {
+        path: '/plan/myPlan',
+        name: 'myPlan',
+        component: MyPlan,
+        meta:{
+          activeMenu: '/plan'
+        }
+      },
+      {
+        path: '/plan/operatePlan',
+        name: 'operatePlan',
+        component: OperatePlan,
+        meta:{
+          activeMenu: '/plan'
+        }
+      },
+    ]
   },
   {
     path: '/about',
@@ -95,7 +124,6 @@ const routes = [
         }
       }
     ]
-
   }
 ]
 

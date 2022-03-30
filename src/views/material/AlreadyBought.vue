@@ -250,6 +250,11 @@ export default {
   methods: {
     // 获取购买记录
     getAlreadyBoughtMaterialListByPage() {
+      const loading = ElLoading.service({
+        fullscreen: false,
+        text: "服务连接中......",
+        background: "rgba(0, 0, 0, 0.8)",
+      });
       this.$http
         .get(
           `/MaterialPurchase/GetAlreadyBoughtMaterialListByPage`,
@@ -260,7 +265,8 @@ export default {
             this.tableData = data;
             this.count = count;
           }
-          // this.$showMessage(code, message);
+          loading.close();
+          this.$showMessage(code, message);
         });
     },
     // 重新搜索数据列表集合

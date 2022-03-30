@@ -113,6 +113,7 @@
           </el-form-item>
         </el-form>
       </el-dialog>
+
       <!-- 选择委托人弹出层 -->
       <SelectClient v-model="isSelectClient"></SelectClient>
       <!-- 鼠标右键上下文菜单栏 -->
@@ -156,7 +157,8 @@ export default {
         userInfo:{
           nickName: '选择委托人',
           userAvatarUrl: ''
-        }
+        },
+        userGid: ''
       },
       // 获取的待购信息
       tableData: [],
@@ -223,7 +225,7 @@ export default {
               this.form.precedenceLevel = 4
               break;
             default:
-              this.showMessage(500,"系统提示，优先级输入异常。")
+              this.showMessage(500,"系统提示，优先级提交异常。")
               return;
           }
           this.form.status = 0;
@@ -238,23 +240,12 @@ export default {
               { ...this.form }
             )
             .then(({ data, code, message }) => {
-              if (code == 200) {
-                this.$message({
-                  message: this.operateName + "成功",
-                  type: "success",
-                  duration: 500,
-                  onClose: () => {
+              this.$showMessage(code, message, () => {
+                if(code = 200){
                     this.form.precedenceLevel = "不重要但紧急"
                     this.getMaterialPurchase();
-                  },
-                });
-              } else {
-                this.$message({
-                  message: message,
-                  type: "error",
-                  duration: 3000,
-                });
-              }
+                }
+              })
               loading.close();
             });
           this.dialogVisible = false;
@@ -265,6 +256,11 @@ export default {
     },
     // 获取待购信息
     getMaterialPurchase() {
+      const loading = ElLoading.service({
+        fullscreen: false,
+        text: "服务连接中......",
+        background: "rgba(0, 0, 0, 0.8)",
+      });
       this.$http
       .get('/MaterialPurchase/GetMaterialPurchaseByPage',
         { params: { ...this.search }}
@@ -274,8 +270,8 @@ export default {
           this.tableData = data;
           this.count = count;
         }
-        this.showMessage(code, message, () => {
-        });
+        loading.close()
+        this.$showMessage(code, message);
       });
     },
     // 待购信息编辑
@@ -296,30 +292,13 @@ export default {
       this.$http
         .delete(`/MaterialPurchase/DeleteMaterialPurchase`, { params: { gid: guid } })
         .then(({ code, message }) => {
-          this.showMessage(code, message, () => {
-            if(code==200) this.getMaterialPurchase();
-            loading.close();
-          }, 3000);
+          this.$showMessage(code, message, ()=> {
+             if(code==200) this.getMaterialPurchase();
+          })
+          loading.close();
         });
     },
-    // 显示消息
-    showMessage(code, message, fun, duration = 1500) {
-      let statu = "";
-      if (code == 200) {
-        statu = "success";
-        duration = 500;
-      } else {
-        statu = "error";
-      }
-      this.$message({
-        message: message,
-        type: statu,
-        duration: duration,
-        onClose: fun,
-      });
-    },
     getCurrentPageIndex(item){
-      console.log(item);
       this.search.pageIndex= item;
       this.getMaterialPurchase();
     },
@@ -345,7 +324,7 @@ export default {
     // 点击菜单方法
     clickMenu(e,index){
       if (this.currentRow == null) {
-        this.showMessage(500,"系统提示，请先选中需要操作的选项！",()=>{}, 3000)
+        this.$showMessage(500,"系统提示，请先选中需要操作的选项！")
         return;
       }
       if (e != null){
@@ -354,7 +333,7 @@ export default {
             if (this.currentRow.status == "待购") {
               this.handleEdit(1, this.currentRow);
             }else{
-              this.showMessage(500,"系统提示，仅待购物质支持编辑！",()=>{}, 3000)
+              this.$showMessage(500,"系统提示，仅待购物质支持编辑！")
             }
             break;
           case 2:
@@ -368,7 +347,7 @@ export default {
                 this.changeStatu(3)
               })
             }else{
-              this.showMessage(500,"系统提示，仅待购物质支持作废操作！",()=>{}, 3000)
+              this.$showMessage(500,"系统提示，仅待购物质支持作废操作！")
             }
             break;
           case 4:
@@ -377,7 +356,7 @@ export default {
                 this.changeStatu(2)
               })
             }else{
-              this.showMessage(500,"系统提示，仅待购物质支持已购操作！",()=>{}, 3000)
+              this.$showMessage(500,"系统提示，仅待购物质支持已购操作！")
             }
 
             break;
@@ -396,10 +375,10 @@ export default {
       });
       this.$http.put(`/MaterialPurchase/ChangeMaterialPurchaseStatus`, {kid:this.currentRow.kid, status:statu})
       .then(({code, message}) => {
-        this.showMessage(code, message, () => {
-          if(code == 200) this.getMaterialPurchase();
-          loading.close();
-        }, 3000);
+        this.$showMessage(code, message, () => {
+          if(code == 200) this.getMaterialPurchase(); 
+        });
+        loading.close();
       })
     }
     ,elAlert(operateName, action){
