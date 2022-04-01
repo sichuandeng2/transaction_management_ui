@@ -53,6 +53,7 @@
 					</template>
 				</el-table-column>
 				<el-table-column prop="planName" label="计划名称" width="220" />
+				<el-table-column prop="planInner" label="计划内容" width="220" />
 				<el-table-column prop="planType" label="计划类型" width="120">
 					<template #default="scope">
 						{{getPlanTypeName(scope.row.planType)}}
