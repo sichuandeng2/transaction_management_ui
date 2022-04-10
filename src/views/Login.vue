@@ -97,10 +97,10 @@ export default {
         return;
       }
 
-      var formdata = new FormData();
-      formdata.append("userName", this.form.account);
-      formdata.append("password", this.form.password);
-      formdata.append("validateCode", this.form.validateCode);
+      // var formdata = new FormData();
+      // formdata.append("userName", this.form.account);
+      // formdata.append("password", this.form.password);
+      // formdata.append("validateCode", this.form.validateCode);
       var params = {
         userName:this.form.account,
         userPassword: this.form.password,
@@ -116,16 +116,17 @@ export default {
             if(code == 1000){
               localStorage["token"] = data;
               this.$router.push("/");
-              loading.close();
             }
           });
-            this.path = this.$http.baseURL + "/Account/GetValidateCode?t=" + new Date().getTime();
-            loading.close();
+          this.path = this.$http.baseURL + "/Account/GetValidateCode?t=" + new Date().getTime();
+          this.form.validateCode = ''
+          loading.close();
         })
         .catch((err) => {
           console.log(err)
           // loading.close();
         });
+        loading.close();
     },
   },
   mounted() {
