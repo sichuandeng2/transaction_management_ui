@@ -112,8 +112,8 @@
 							</div>
 						</template>
 						<div class="avatarInfo">
-							<div @click="exit" class="none-select">退出</div>
 							<div class="none-select" @click="this.$router.push({path:'/user/index'})">个人信息</div>
+							<div @click="exit" class="none-select">切换用户</div>
 						</div>
 					</el-popover>
 				</div>
@@ -290,7 +290,7 @@
 			// 页头
 			.layout-page-header {
 				padding: 10px;
-				background-color: #ffffff;
+				background-color: #FFFFFF;
 				box-shadow: 0px 8px 5px #cccccc;
 				position: sticky;
 				top: 0;
@@ -356,6 +356,7 @@
 	}
 </style>
 <style scoped>
+
 	.header-inner .el-input /deep/ .el-input__inner {
 		height: 28px;
 	}

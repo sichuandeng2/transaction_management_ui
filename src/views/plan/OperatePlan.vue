@@ -13,15 +13,15 @@
       </div>
       <el-divider class="hir-line"></el-divider>
 
-      <el-table :data="tableData" highlight-current-row>
+      <el-table :data="tableData" highlight-current-row max-height="calc( 100vh - 225px)" style="overflow-y: scroll;">
         <el-table-column prop="kid" label="序号" width="50">
           <template #default="scope">
             {{ ++scope.$index }}
           </template>
         </el-table-column>
-        <el-table-column prop="planName" label="计划名称" width="180" show-overflow-tooltip= true />
+        <el-table-column prop="planName" label="计划名称" width="120" show-overflow-tooltip= true />
         <el-table-column prop="progress" label="进度" width="80" show-overflow-tooltip= true />
-        <el-table-column prop="planInner" label="计划内容" width="300" show-overflow-tooltip= true />
+        <el-table-column prop="planInner" label="计划内容" width="120" show-overflow-tooltip= true />
         <el-table-column prop="expireDate" label="到期时间" width="220" show-overflow-tooltip= true />
 				<el-table-column prop="cycleTime" label="周期" width="80">
 					<template #default="scope">
@@ -94,7 +94,7 @@ export default {
       rules: {
         progress: [
           { required: true, message: "进度信息不能为空", trigger: "blur" },
-          { type: "number", message: "请输入整数", trigger: "blur" },
+          { pattern:/^(\d|[1-9]\d|100)$/, message: "请输入0-100的整数", trigger: "blur"},
         ],
         // quantityRequired: [
         //   { required: true, message: "购置数量不能为空", trigger: "blur" },
@@ -237,7 +237,7 @@ export default {
             this.$showMessage(code, message, () => {
               if(code == 200) {
                 this.getCurentPlanLogByPage()
-                this.isShowEdteOrInsert = false
+                this.isShowTask = false
               }
             })
           })

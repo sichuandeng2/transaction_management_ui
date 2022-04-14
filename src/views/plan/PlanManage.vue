@@ -46,20 +46,20 @@
 			  <el-button type="primary" @click="insertPlan" style="height: 16px">新增计划</el-button>
 			</div>
 			<!-- 表格 -->
-			<el-table :data="tableData" highlight-current-row>
+			<el-table :data="tableData" highlight-current-row max-height="calc( 100vh - 214px)" style="overflow-y: scroll;">
 				<el-table-column prop="gid" label="序号" width="50">
 					<template #default="scope">
 						{{ ++scope.$index }}
 					</template>
 				</el-table-column>
-				<el-table-column prop="planName" show-overflow-tooltip= true label="计划名称" width="220" />
-				<el-table-column prop="planInner" show-overflow-tooltip= true  label="计划内容" width="220" />
+				<el-table-column prop="planName" show-overflow-tooltip= true label="计划名称" width="120" />
+				<el-table-column prop="planInner" show-overflow-tooltip= true  label="计划内容" width="120" />
 				<el-table-column prop="planType" show-overflow-tooltip= true label="计划类型" width="120">
 					<template #default="scope">
 						{{getPlanTypeName(scope.row.planType)}}
 					</template>
 				</el-table-column>
-				<el-table-column prop="cycleTime" label="时间" width="220" show-overflow-tooltip= true>
+				<el-table-column prop="cycleTime" label="到期时间" width="220" show-overflow-tooltip= true>
 					<template #default="scope">
 						{{getCycleTime(scope.row.timeZone, scope.row.cycleType)}}
 					</template>
@@ -294,6 +294,7 @@
 				this.formData.planType = row.planType + ''
 				this.formData.cycleType = row.cycleType + ''
 				this.formData.planName = row.planName
+				this.formData.planInner = row.planInner
 				this.formData.kid = row.kid
 				this.formData.remark = row.remark
 				this.formData.selectedTime = new Date(row.timeZone)

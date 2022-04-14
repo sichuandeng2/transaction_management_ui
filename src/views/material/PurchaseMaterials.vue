@@ -29,7 +29,7 @@
       </div>
       <el-divider class="hir-line"></el-divider>
       <!-- 表格 -->
-      <el-table :data="tableData" highlight-current-row>
+      <el-table :data="tableData" highlight-current-row max-height="calc( 100vh - 225px)" style="overflow-y: scroll;">
         <el-table-column prop="kid" label="序号" width="50">
           <template #default="scope">
             {{ ++scope.$index }}
