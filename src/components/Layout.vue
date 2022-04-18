@@ -175,7 +175,7 @@
 		},
 		setup() {
 			const state = reactive({
-				circleUrl: "http://127.0.0.1:8080/avatar.jpg",
+				circleUrl: "http://43.138.151.223:5000/avatar.jpg",
 			});
 			const exit = () => {
 				localStorage.clear("token");
