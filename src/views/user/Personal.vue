@@ -4,7 +4,7 @@
             <div>
                 <h1>个人信息</h1>
                 <div class="info">
-                    <el-avatar :size="40" :src="userInfomation.userAvatarUrl">{{userInfomation.userAvatarUrl==''?"添加":""}}</el-avatar>
+                    <el-avatar :size="40" :src="$http.baseURL + userInfomation.userAvatarUrl">{{userInfomation.userAvatarUrl==''?"添加":""}}</el-avatar>
                     <div class="none-select">{{userInfomation.nickName}}</div>
                     <p>账号：{{userInfomation.userName}}</p>
                     <p>用户名：{{userInfomation.nickName}}</p>
@@ -22,9 +22,28 @@
 		<!-- 编辑弹出层 -->
 		<el-dialog title="编辑" v-model="isShowEditeUserInfo" width="680px">
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-          <div  @click="this.isSelectClient = true" class="cursor-pointer" >
+          <div  >
             <el-form-item label="头像" prop="userGid">
-              <el-avatar :size="40" :src="form.userAvatarUrl" >{{form.userAvatarUrl==''?"添加":""}}</el-avatar>
+                <el-upload
+    ref="upload"
+    action="https://jsonplaceholder.typicode.com/posts/"
+    :limit="1"
+    :on-change="changeFile"
+    :auto-upload="false"
+  >
+    <template #trigger>
+      <el-avatar :size="40" :src="$http.baseURL + form.userAvatarUrl">{{form.userAvatarUrl==''?"添加":""}}</el-avatar>
+      <!-- <el-button type="primary">select file</el-button> -->
+    </template>
+    <el-button class="ml-3" type="success" @click="submitUpload" style="display:none">
+      upload to server
+    </el-button>
+    <!-- <template #tip>
+      <div class="el-upload__tip text-red">
+        limit 1 file, new file will cover the old file
+      </div>
+    </template> -->
+  </el-upload>
             </el-form-item>
           </div>
           <div style="display: flex">
@@ -68,7 +87,7 @@
             <el-input v-model="form.remark" type="textarea" rows="5"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="onSubmit('form')">提交</el-button>
+            <el-button type="primary"  @click="onSubmit('form')">提交</el-button>
             <el-button @click="isShowEditeUserInfo = false">取消</el-button>
           </el-form-item>
         </el-form>
@@ -77,7 +96,8 @@
 
 <script>
 import Layout from "../../components/Layout.vue";
-import { ElLoading } from "element-plus";
+import { genFileId,ElLoading } from 'element-plus'
+import { UploadInstance, UploadProps, UploadRawFile } from 'element-plus'
 export default {
     name:"personal",
     components:{
@@ -93,7 +113,9 @@ export default {
                 email: '',
             },
 			isShowEditeUserInfo: false,
-			form: {},// 对表单的验证规则
+			form: {
+        file:{}
+      },// 对表单的验证规则
 			rules: {
 				qq: [
 					{ pattern: /^[1-9][0-9]{4,14}$/, message: '请输入有效的QQ账号' }
@@ -151,7 +173,15 @@ export default {
           return false;
         }
       });
-			}
+			},
+      submitUpload(){
+        // upload.value!.submit()
+      },
+      changeFile(file){
+        console.log(file)
+        this.form.file = file.raw;
+        console.log(this.form.file);
+      }
 		}
     
 }

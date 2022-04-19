@@ -57,7 +57,7 @@ export default {
         validateCode: "",
       },
       title: "事务管理系统",
-      path: "http://localhost:5000/api/Account/GetValidateCode",
+      path: this.$http.baseURL+"/Account/GetValidateCode",
     };
   },
   methods: {

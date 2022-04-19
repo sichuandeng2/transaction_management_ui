@@ -13,16 +13,16 @@
       </div>
       <el-divider class="hir-line"></el-divider>
 
-      <el-table :data="tableData" highlight-current-row>
+      <el-table :data="tableData" highlight-current-row max-height="calc( 100vh - 225px)" style="overflow-y: scroll;">
         <el-table-column prop="kid" label="序号" width="50">
           <template #default="scope">
             {{ ++scope.$index }}
           </template>
         </el-table-column>
-        <el-table-column prop="planName" label="计划名称" width="180" />
-        <el-table-column prop="progress" label="进度" width="80" />
-        <el-table-column prop="planInner" label="计划内容" width="300" />
-        <el-table-column prop="expireDate" label="到期时间" width="220" />
+        <el-table-column prop="planName" label="计划名称" width="120" show-overflow-tooltip= true />
+        <el-table-column prop="progress" label="进度" width="80" show-overflow-tooltip= true />
+        <el-table-column prop="planInner" label="计划内容" width="120" show-overflow-tooltip= true />
+        <el-table-column prop="expireDate" label="到期时间" width="220" show-overflow-tooltip= true />
 				<el-table-column prop="cycleTime" label="周期" width="80">
 					<template #default="scope">
 						{{getCycleText(scope.row.cycleType)}}
@@ -57,70 +57,18 @@
       <!-- 弹出层 -->
       <el-dialog title="编辑" v-model="isShowTask" width="680px">
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-          <div >
-            <el-form-item label="委托" prop="userGid"
-              ><el-avatar :size="40" :src="form.userInfo.userAvatarUrl">{{
-                form.userInfo.userAvatarUrl == "" ? "添加" : ""
-              }}</el-avatar>
-              <div class="none-select">
-                {{ form.userInfo.nickName }}
-              </div></el-form-item
-            >
-          </div>
-          <div style="display: flex">
-            <el-form-item label="物质名称" prop="materialName">
+            <el-form-item label="当前进度" prop="progress">
               <el-input
-                v-model="form.materialName"
-                placeholder="请输入物品名称"
-                disabled
+                v-model.number="form.progress"
+                placeholder="请输入当前进度"
               ></el-input>
             </el-form-item>
-            <el-form-item label="物质类型">
-              <el-input
-                v-model="form.modelNumber"
-                placeholder="请输入物品型号"
-                disabled
-              ></el-input>
-            </el-form-item>
-          </div>
-          <div style="display: flex">
-            <el-form-item label="购买数量" prop="quantityRequired">
-              <el-input
-                v-model.number="form.quantityRequired"
-                placeholder="请输入数量" 
-                disabled
-              ></el-input>
-            </el-form-item>
-            <el-form-item label="金额">
-              <el-input v-model="form.unitPrice" placeholder="0.00" disabled>
-                <template #append>元</template>
-              </el-input>
-            </el-form-item>
-          </div>
-          <el-form-item label="地点">
-            <el-input
-              v-model="form.suggestLocation"
-              placeholder="请输入建议地点"
-              disabled
-            ></el-input>
-          </el-form-item>
-          <div style="display: flex">
-            <el-form-item label="优先级">
-              <el-radio-group v-model="form.precedenceLevel" disabled >
-                <el-radio label="重要且紧急">重要且紧急</el-radio>
-                <el-radio label="不重要但紧急">不重要但紧急</el-radio>
-                <el-radio label="重要但不急">重要但不急</el-radio>
-                <el-radio label="不重要也不急">不重要也不急</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </div>
           <el-form-item label="备注">
-            <el-input v-model="form.remark" type="textarea" rows="5" disabled></el-input>
+            <el-input v-model="form.remark" type="textarea" rows="5" ></el-input>
           </el-form-item>
-          <el-form-item label="发布日期"><p style="text-align:left;">{{this.form.createTime}}</p></el-form-item>
           <el-form-item>
-            <!-- <el-button type="primary" @click="purchase('form')">确定</el-button> -->
-            <el-button @click="isShowDialog = false">取消</el-button>
+            <el-button type="primary" @click="submit('form')">确定</el-button>
+            <el-button @click="isShowTask = false">取消</el-button>
           </el-form-item>
         </el-form>
       </el-dialog>
@@ -140,27 +88,18 @@ export default {
     return {
       tableData: [],
       form: {
-        materialName: "",
-        ModelNumber: "",
-        quantityRequired: 0,
-        unitPrice: null,
-        suggestLocation: "",
-        precedenceLevel: "不重要但紧急",
+        progress: "",
         remark: "",
-        userInfo: {
-          nickName: "选择委托人",
-          userAvatarUrl: "",
-        },
       },
       rules: {
-        materialName: [
-          { required: true, message: "材料名称不能为空", trigger: "blur" },
-          { max: 255, message: "长度不能超过 255 个字符", trigger: "blur" },
+        progress: [
+          { required: true, message: "进度信息不能为空", trigger: "blur" },
+          { pattern:/^(\d|[1-9]\d|100)$/, message: "请输入0-100的整数", trigger: "blur"},
         ],
-        quantityRequired: [
-          { required: true, message: "购置数量不能为空", trigger: "blur" },
-          { type: "number", message: "请输入整数", trigger: "blur" },
-        ],
+        // quantityRequired: [
+        //   { required: true, message: "购置数量不能为空", trigger: "blur" },
+        //   { type: "number", message: "请输入整数", trigger: "blur" },
+        // ],
       },
       search: {
         planName: "",
@@ -213,8 +152,11 @@ export default {
       this.search.pageSize = item;
       this.getCurentPlanLogByPage();
     },
-    edite(){
-
+    edite(planItem){
+      this.form.progress = planItem.progress
+      this.form.remark = planItem.remark
+      this.form.kid = planItem.kid
+      this.isShowTask = true
     },
     // 获取计划类型名称
     getPlanTypeName(planTypeIndex) {
@@ -287,6 +229,25 @@ export default {
           return time.format("MM-dd hh:mm")
       }
     },
+    submit(formName){
+      this.$refs[formName].validate(valid =>{
+        if(valid){
+          this.$http.put('/Plan/UpdatePlanLog', {...this.form})
+          .then(({code, message}) => {
+            this.$showMessage(code, message, () => {
+              if(code == 200) {
+                this.getCurentPlanLogByPage()
+                this.isShowTask = false
+              }
+            })
+          })
+        }
+        else{
+          console.log("表单验证失败")
+        }
+      })
+
+    }
   },
   mounted() {
     this.getCurentPlanLogByPage();

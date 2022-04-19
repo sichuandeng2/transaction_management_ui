@@ -29,7 +29,7 @@
       </div>
       <el-divider class="hir-line"></el-divider>
       <!-- 表格 -->
-      <el-table :data="tableData" highlight-current-row>
+      <el-table :data="tableData" highlight-current-row max-height="calc( 100vh - 225px)" style="overflow-y: scroll;">
         <el-table-column prop="kid" label="序号" width="50">
           <template #default="scope">
             {{ ++scope.$index }}
@@ -74,7 +74,7 @@
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
           <div >
             <el-form-item label="委托" prop="userGid"
-              ><el-avatar :size="40" :src="form.userInfo.userAvatarUrl">{{
+              ><el-avatar :size="40" :src="$http.baseURL + form.userInfo.userAvatarUrl">{{
                 form.userInfo.userAvatarUrl == "" ? "添加" : ""
               }}</el-avatar>
               <div class="none-select">
