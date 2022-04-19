@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { stringifyQuery } from 'vue-router';
-const baseURL = "http://43.138.151.223:5000/api"
-// const baseURL = "http://localhost:5000/api"
+// const baseURL = "http://43.138.151.223:5000/api"
+const baseURL = "http://localhost:5000/api"
 // 指定默认地址
 axios.defaults.baseURL = baseURL;
 axios.defaults.timeout = 30000;

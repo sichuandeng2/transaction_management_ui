@@ -57,7 +57,7 @@
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
           <div  @click="this.isSelectClient = true" class="cursor-pointer" >
             <el-form-item label="委托" prop="userGid">
-              <el-avatar :size="40" :src="form.userInfo.userAvatarUrl" >{{form.userInfo.userAvatarUrl==''?"添加":""}}</el-avatar>
+              <el-avatar :size="40" :src="$http.baseURL + form.userInfo.userAvatarUrl" >{{form.userInfo.userAvatarUrl==''?"添加":""}}</el-avatar>
               <div class="none-select">{{form.userInfo.nickName}}</div>
             </el-form-item>
           </div>

@@ -8,7 +8,7 @@
         <div class="select-client-module">
             <template v-for="item in userInformationList" :key="item.gid">
                 <div class="user-list-item cursor-pointer" @click="clickUserListItem(item)">
-                    <el-avatar :size="40" :src="item.userAvatarUrl"></el-avatar>
+                    <el-avatar :size="40" :src="$http.baseURL + item.userAvatarUrl"></el-avatar>
                     <div class="none-select">{{item.nickName}}</div>
                 </div>
             </template>

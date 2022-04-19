@@ -107,7 +107,7 @@
 					<el-popover placement="bottom-end" :width="200" trigger="hover">
 						<template #reference>
 							<div class="aviter">
-								<el-avatar :size="40" :src="circleUrl"></el-avatar>
+								<el-avatar :size="40" :src="$http.baseURL + userInfo.userAvatarUrl"></el-avatar>
 								<div class="none-select">{{userInfo.nickName}}</div>
 							</div>
 						</template>
