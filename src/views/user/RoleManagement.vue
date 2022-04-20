@@ -3,9 +3,9 @@
     <template v-slot:inner>
       <div style="display: flex; justify-content: space-between">
         <el-form label-width="80px" style="display: flex">
-          <el-form-item label="用户名">
+          <el-form-item label="角色">
             <el-input
-              v-model="search.userName"
+              v-model="search.roleName"
               v-on:input="research"
             ></el-input>
           </el-form-item>
@@ -18,24 +18,15 @@
             {{ ++scope.$index }}
           </template>
         </el-table-column>
-        <el-table-column prop="userName" label="用户名" width="120" show-overflow-tooltip= true />
-        <!-- <el-table-column prop="nickName" label="昵称" width="120" show-overflow-tooltip= true /> -->
-				<el-table-column prop="userGender" label="性别" width="80" show-overflow-tooltip= true >
-					<template #default="scope">
-						{{getUserGender(scope.row.userGender)}}
-					</template>
-				</el-table-column>
-        <el-table-column prop="roles" label="角色" width="160" show-overflow-tooltip= true >
-					<template #default="scope">
-						{{scope.row.roles.join(',')}}
-					</template>
-				</el-table-column>
-        <el-table-column prop="phone" label="手机" width="160" show-overflow-tooltip= true />
-        <!-- <el-table-column prop="wechat" label="微信" width="160" show-overflow-tooltip= true /> -->
-        <el-table-column prop="email" label="邮箱" width="160" show-overflow-tooltip= true />
-				<el-table-column prop="lastLoginTime" label="最后登录" />
-				<el-table-column prop="createTime" label="创建时间" />
-        <el-table-column label="操作">
+        <el-table-column prop="roleName" label="角色" width="120" show-overflow-tooltip= true />
+        <el-table-column prop="authorityByKid" label="授权" width="320" show-overflow-tooltip= true />
+        <el-table-column prop="kid" label="状态" width="50">
+          <template #default="scope">
+            {{ scope.row.isEnable ? "启用":"停用" }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="createTime" label="创建时间" width="180" show-overflow-tooltip= true />
+                <el-table-column label="操作">
             <template #default="scope">
                 <el-button type="text" v-if="!scope.row.isEnable"  @click="changeIsEnable(scope.row.kid, true)">启用</el-button>
                 <el-button type="text" v-else @click="changeIsEnable(scope.row.kid, false)">禁用</el-button>
@@ -175,7 +166,7 @@ export default {
     return {
       tableData: [],
       search: {
-        userName: "",
+        roleName: "",
         pageSize: 10,
         pageIndex: 1
       },
@@ -209,7 +200,7 @@ export default {
     }
   },
   methods:{
-    getUserInformationListByPage(){
+    getUserRoleListByPage(){
       const loading = ElLoading.service({
         fullscreen: false,
         text: "服务连接中......",
@@ -217,7 +208,7 @@ export default {
       });
       this.$http
         .get(
-          `/Account/getUserInformationListByPage`,
+          `/Account/GetUserRoleListByPage`,
           { params: { ...this.search } }
         )
         .then(({ data, code, message, count }) => {
@@ -231,11 +222,11 @@ export default {
     },
     getCurrentPageIndex(item) {
       this.search.pageIndex = item;
-      this.getUserInformationListByPage();
+      this.getUserRoleListByPage();
     },
     handleChange(item) {
       this.search.pageSize = item;
-      this.getUserInformationListByPage();
+      this.getUserRoleListByPage();
     },
     getUserGender(index){
       switch (index) {
@@ -254,7 +245,7 @@ export default {
         this.searchMark = null;
       }
       this.searchMark = window.setTimeout(() => {
-        this.getUserInformationListByPage();
+        this.getUserRoleListByPage();
       }, 1000);
     },
     // 调整启用状态
@@ -272,7 +263,7 @@ export default {
       .then(({ code, message }) => {
         this.$showMessage(code, message, ()=>{
           if (code == 200) {
-            this.getUserInformationListByPage();
+            this.getUserRoleListByPage();
           }
         })
         loading.close();
@@ -303,7 +294,7 @@ export default {
       .then(({ code, message }) => {
         this.$showMessage(code, message, ()=> {
           if (code == 200) {
-            this.getUserInformationListByPage();
+            this.getUserRoleListByPage();
           }
         })
         loading.close();
@@ -332,7 +323,7 @@ export default {
             )
             .then(({ code, message }) => {
               this.$showMessage(code, message, ()=> {
-                this.getUserInformationListByPage();
+                this.getUserRoleListByPage();
                 this.isShowEditeUserInfo = false;
               })
               loading.close();
@@ -357,7 +348,7 @@ export default {
     }
   },
   mounted(){
-    this.getUserInformationListByPage();
+    this.getUserRoleListByPage();
     this.getUserRolesSelectBox();
   }
 }

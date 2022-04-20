@@ -69,12 +69,6 @@
 							<span class="none-select">我的计划</span>
 						</el-menu-item>
 					</el-sub-menu>
-					<!-- <el-menu-item index="/plan">
-						<el-icon>
-							<flag />
-						</el-icon>
-						<span class="none-select">计划</span>
-					</el-menu-item> -->
 					<el-sub-menu index="/user">
 						<template #title>
 							<el-icon :class="{'select-sub-menu' : isSelectUser}">
@@ -93,6 +87,12 @@
 								<Bell />
 							</el-icon>
 							<span class="none-select">用户管理</span>
+						</el-menu-item>
+						<el-menu-item index="/user/roleManagement" v-if="isShowManageMenu">
+							<el-icon>
+								<Bell />
+							</el-icon>
+							<span class="none-select">角色管理</span>
 						</el-menu-item>
 					</el-sub-menu>
 				</el-menu>
@@ -235,6 +235,8 @@
 			}
 			else{
 				this.userInfo = JSON.parse(userInforationJson);
+				this.isShowManageMenu = this.userInfo.isAdmin
+
 			}
 			
 		},

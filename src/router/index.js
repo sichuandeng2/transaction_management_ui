@@ -13,6 +13,7 @@ import AlreadyBought from '../views/material/AlreadyBought.vue'
 import UserLayout from '../views/user/UserLayout.vue'
 import Personal from '../views/user/Personal.vue'
 import UserManagement from'../views/user/UserManagement.vue'
+import RoleManagement from'../views/user/RoleManagement.vue'
 const routes = [
   {
     path: '/',
@@ -122,7 +123,15 @@ const routes = [
         meta:{
           activeMenu: '/user'
         }
-      }
+      },
+      {
+        path: '/user/roleManagement',
+        name: 'roleManagement',
+        component: RoleManagement,
+        meta:{
+          activeMenu: '/user'
+        }
+      },
     ]
   }
 ]

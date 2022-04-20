@@ -4,7 +4,7 @@
             <div>
                 <h1>个人信息</h1>
                 <div class="info">
-                    <el-avatar :size="40" :src="$http.baseURL + userInfomation.userAvatarUrl">{{userInfomation.userAvatarUrl==''?"添加":""}}</el-avatar>
+                    <el-avatar :size="60" :src="$http.baseURL + userInfomation.userAvatarUrl">{{userInfomation.userAvatarUrl==''?"添加":""}}</el-avatar>
                     <div class="none-select">{{userInfomation.nickName}}</div>
                     <p>账号：{{userInfomation.userName}}</p>
                     <p>用户名：{{userInfomation.nickName}}</p>
@@ -25,38 +25,45 @@
           <div  >
             <el-form-item label="头像" prop="userGid">
                 <el-upload
-    ref="upload"
-    action="https://jsonplaceholder.typicode.com/posts/"
-    :limit="1"
-    :on-change="changeFile"
-    :auto-upload="false"
-  >
-    <template #trigger>
-      <el-avatar :size="40" :src="$http.baseURL + form.userAvatarUrl">{{form.userAvatarUrl==''?"添加":""}}</el-avatar>
-      <!-- <el-button type="primary">select file</el-button> -->
-    </template>
-    <el-button class="ml-3" type="success" @click="submitUpload" style="display:none">
-      upload to server
-    </el-button>
-    <!-- <template #tip>
-      <div class="el-upload__tip text-red">
-        limit 1 file, new file will cover the old file
-      </div>
-    </template> -->
-  </el-upload>
+                  ref="upload"
+                  :action="$http.baseURL + '/Account/uploadAvatar'"
+                  :headers="customHeaders"
+                  :limit="1"
+                  :on-success="uploudSuccess"
+                >
+                  <template #trigger>
+                    <el-avatar :size="60" :src="$http.baseURL + form.userAvatarUrl">{{form.userAvatarUrl==''?"添加":""}}</el-avatar>
+                    <!-- <el-button type="primary">select file</el-button> -->
+                  </template>
+                  <el-button class="ml-3" type="success" @click="submitUpload" style="display:none">
+                    upload to server
+                  </el-button>
+                  <!-- <template #tip>
+                    <div class="el-upload__tip text-red">
+                      limit 1 file, new file will cover the old file
+                    </div>
+                  </template> -->
+                </el-upload>
             </el-form-item>
           </div>
-          <div style="display: flex">
-            <el-form-item label="用户昵称" prop="nickName">
+          <el-form-item label="用户昵称" prop="nickName">
               <el-input
                 v-model="form.nickName"
                 placeholder="用户昵称"
               ></el-input>
             </el-form-item>
+          <div style="display: flex">
+
             <el-form-item label="手机" prop="phone">
               <el-input
                 v-model="form.phone"
                 placeholder="请输入手机号码"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="微信" prop="wechat">
+              <el-input
+                v-model="form.wechat"
+                placeholder="请输入微信号"
               ></el-input>
             </el-form-item>
           </div>
@@ -91,7 +98,7 @@
             <el-button @click="isShowEditeUserInfo = false">取消</el-button>
           </el-form-item>
         </el-form>
-      </el-dialog>
+    </el-dialog>
 </template>
 
 <script>
@@ -104,35 +111,38 @@ export default {
         Layout
     },
     data(){
-        return{
-            name: 'developer',
-            userInfomation: {
-                avater: "",
-                userName: '',
-                phone: '',
-                email: '',
-            },
-			isShowEditeUserInfo: false,
-			form: {
-        file:{}
-      },// 对表单的验证规则
-			rules: {
-				qq: [
-					{ pattern: /^[1-9][0-9]{4,14}$/, message: '请输入有效的QQ账号' }
-				],
-				phone: [
-					{ required: true, message: "手机号能为空", trigger: "blur" },
-					{ pattern: /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/, message: "请输入有效电话号码", trigger: "blur" },
-				],
-				nickName: [
-					{ required: true, message: "用户昵称不能为空", trigger: "blur" },
-					{ min: 3, message: "用户名不能短于3个字符", trigger: "blur" },
-				],
-				email:[
-					{ pattern: /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/, message: "请输入有效的邮箱地址", trigger: "blur" },
-				],
-			},
+      return{
+        name: 'developer',
+        userInfomation: {
+            avater: "",
+            userName: '',
+            phone: '',
+            email: '',
+        },
+        isShowEditeUserInfo: false,
+        form: {
+          file:{}
+        },// 对表单的验证规则
+        rules: {
+          qq: [
+            { pattern: /^[1-9][0-9]{4,14}$/, message: '请输入有效的QQ账号' }
+          ],
+          phone: [
+            { required: true, message: "手机号能为空", trigger: "blur" },
+            { pattern: /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/, message: "请输入有效电话号码", trigger: "blur" },
+          ],
+          nickName: [
+            { required: true, message: "用户昵称不能为空", trigger: "blur" },
+            { min: 3, message: "用户名不能短于3个字符", trigger: "blur" },
+          ],
+          email:[
+            { pattern: /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/, message: "请输入有效的邮箱地址", trigger: "blur" },
+          ],
+        },
+        customHeaders:{
+          authorization:"bearer " + localStorage["token"]
         }
+      }
     },
     mounted(){
       let userInformationJson = sessionStorage["userInfomation"];
@@ -181,9 +191,17 @@ export default {
         console.log(file)
         this.form.file = file.raw;
         console.log(this.form.file);
+      },
+      uploudSuccess({code, data, message}){
+         this.$showMessage(code, message, ()=>{
+          if (code == 200) {
+            this.userInfomation.avater = data.userAvatarUrl;
+            this.form.userAvatarUrl= data.userAvatarUrl;
+            sessionStorage["userInfomation"] = JSON.stringify(data);
+          }
+        });
       }
 		}
-    
 }
 </script>
 
