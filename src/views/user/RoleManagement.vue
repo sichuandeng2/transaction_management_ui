@@ -10,7 +10,7 @@
             ></el-input>
           </el-form-item>
         </el-form>
-        <el-button type="primary" @click="inseartUser" style="height: 16px">新增用户</el-button>
+        <el-button type="primary" @click="inseartUser" style="height: 16px">新增角色</el-button>
       </div>
       <el-table :data="tableData" highlight-current-row max-height="calc( 100vh - 225px)" style="overflow-y: scroll;">
         <el-table-column prop="kid" label="序号" width="50">
@@ -26,12 +26,12 @@
           </template>
         </el-table-column>
         <el-table-column prop="createTime" label="创建时间" width="180" show-overflow-tooltip= true />
-                <el-table-column label="操作">
+          <el-table-column label="操作">
             <template #default="scope">
                 <el-button type="text" v-if="!scope.row.isEnable"  @click="changeIsEnable(scope.row.kid, true)">启用</el-button>
                 <el-button type="text" v-else @click="changeIsEnable(scope.row.kid, false)">禁用</el-button>
-                <el-button type="text" @click="editeUserInformation(scope.row)">编辑</el-button>
-                <el-button type="text" @click="deleteUser(scope.row.kid)">删除</el-button>
+                <el-button type="text" @click="editeRoleInformation(scope.row)">编辑</el-button>
+                <el-button type="text" @click="deleteRole(scope.row.kid)">删除</el-button>
             </template>
         </el-table-column>
       </el-table>
@@ -48,105 +48,32 @@
         ></el-pagination>
       </div>
       <!-- 编辑弹出层 -->
-		<el-dialog :title="(isEdite ? '编辑': '新增') + '用户'" v-model="isShowEditeUserInfo" width="680px">
+		<el-dialog :title="(isEdite ? '编辑': '新增') + '角色'" v-model="isShowEditeRoleInfo" width="680px">
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-          <div  >
-            <el-form-item label="头像" prop="userGid" v-if="isEdite">
-                <el-upload
-                  ref="upload"
-                  :action="$http.baseURL + '/Account/uploadAvatar'"
-                  :headers="customHeaders"
-                  :limit="1"
-                  :on-success="uploudSuccess"
-                >
-                  <template #trigger>
-                    <el-avatar :size="60" :src="$http.baseURL + form.userAvatarUrl">{{form.userAvatarUrl==''?"添加":""}}</el-avatar>
-                    <!-- <el-button type="primary">select file</el-button> -->
-                  </template>
-                  <el-button class="ml-3" type="success" @click="submitUpload" style="display:none">
-                    upload to server
-                  </el-button>
-                  <!-- <template #tip>
-                    <div class="el-upload__tip text-red">
-                      limit 1 file, new file will cover the old file
-                    </div>
-                  </template> -->
-                </el-upload>
-            </el-form-item>
-          </div>
-          <div style="display: flex">
-            <el-form-item label="账号" prop="userName" v-if="!isEdite">
-              <el-input
-                v-model="form.userName"
-                placeholder="登录账号"
-              ></el-input>
-            </el-form-item>
-            <el-form-item label="昵称" prop="nickName">
-              <el-input
-                v-model="form.nickName"
-                placeholder="用户昵称"
-              ></el-input>
-            </el-form-item>
-          </div>
-
-          <div style="display: flex">
-            <el-form-item label="手机" prop="phone">
-              <el-input
-                v-model="form.phone"
-                placeholder="请输入手机号码"
-              ></el-input>
-            </el-form-item>
-            <el-form-item label="微信" prop="wechat">
-              <el-input
-                v-model="form.wechat"
-                placeholder="请输入微信号"
-              ></el-input>
-            </el-form-item>
-          </div>
-          <div style="display: flex">
-            <el-form-item label="QQ" prop="qq">
-              <el-input
-                v-model="form.qq"
-                placeholder="请输入QQ"
-              ></el-input>
-            </el-form-item>
-            <el-form-item label="邮箱" prop="email">
-              <el-input
-                v-model="form.email"
-                placeholder="请输入邮箱地址"
-              ></el-input>
-            </el-form-item>
-          </div>
-          <div style="display: flex">
-            <el-form-item label="性别">
-              <el-radio-group v-model="form.userGender">
-                <el-radio label="0">未知</el-radio>
-                <el-radio label="1">男</el-radio>
-                <el-radio label="2">女</el-radio>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item label="角色">
-              <el-select
-                v-model="form.roleByGid"
-                multiple
-                collapse-tags
-                style="width: 240px"
-              >
-                <el-option
-                  v-for="item in roleSelectBoxItem"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                />
-              </el-select>
-            </el-form-item>
-          </div>
+          <el-form-item label="角色" prop="roleName">
+            <el-input
+              v-model="form.roleName"
+              placeholder="请输入角色名称"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="权限">
+            <el-tree
+              :data="authorizationTree"
+              show-checkbox
+              v-model="selectThree"
+              node-key="id"
+              accordion
+              ref = "tree"
+              :default-checked-keys="form.authorityByKid"
+              :props="defaultProps">
+            </el-tree>
+          </el-form-item>
           <el-form-item label="备注">
             <el-input v-model="form.remark" type="textarea" rows="5"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary"  @click="onSubmit('form')">提交</el-button>
-            <el-button @click="isShowEditeUserInfo = false">取消</el-button>
+            <el-button @click="isShowEditeRoleInfo = false">取消</el-button>
           </el-form-item>
         </el-form>
     </el-dialog>
@@ -157,6 +84,7 @@
 <script>
 import Layout from "../../components/Layout.vue";
 import { ElLoading } from "element-plus";
+import { ref } from 'vue'
 export default {
   name: "用户管理",
   components:{
@@ -170,33 +98,27 @@ export default {
         pageSize: 10,
         pageIndex: 1
       },
-      isShowEditeUserInfo: false,
+      isShowEditeRoleInfo: false,
       form:{
         kid: null,
-        roleByGid:[],
+        authorityByKid:[],
+        roleName: "",
+        remark: ""
       },
       rules: {
-        qq: [
-          { pattern: /^[1-9][0-9]{4,14}$/, message: '请输入有效的QQ账号' }
-        ],
-        phone: [
-          { required: true, message: "手机号能为空", trigger: "blur" },
-          { pattern: /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/, message: "请输入有效电话号码", trigger: "blur" },
-        ],
-        userName: [
-          { required: true, message: "用户账号不能为空", trigger: "blur" },
-          { min: 3, message: "用户账号不能短于3个字符", trigger: "blur" },
-        ],
-        nickName: [
-          { required: true, message: "用户昵称不能为空", trigger: "blur" },
-          { min: 3, message: "用户名不能短于3个字符", trigger: "blur" },
-        ],
-        email:[
-          { pattern: /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/, message: "请输入有效的邮箱地址", trigger: "blur" },
+        roleName: [
+          { required: true, message: "角色名称不能为空", trigger: "blur" },
+          { min: 2, message: "用户账号不能短于2个字符", trigger: "blur" },
         ],
       },
       isEdite: false,
-      roleSelectBoxItem:[]
+      selectAuthorizationBoxItem:[],
+      authorizationTree:[],
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      },
+      selectThree:[],
     }
   },
   methods:{
@@ -228,16 +150,6 @@ export default {
       this.search.pageSize = item;
       this.getUserRoleListByPage();
     },
-    getUserGender(index){
-      switch (index) {
-        case 1:
-          return "男"
-        case 2:
-          return "女"
-        default:
-          return "未知"
-      }
-    },
     // 重新搜索数据列表集合
     research() {
       if (this.searchMark) {
@@ -257,7 +169,7 @@ export default {
       });
       this.$http
       .put(
-        `/Account/UpdateUserIsEnable`,
+        `/Account/UpdateRoleIsEnable`,
         { kid:kid, isEnable:statu }
       )
       .then(({ code, message }) => {
@@ -269,18 +181,19 @@ export default {
         loading.close();
       });
     },
-    // 编辑用户信息
-    editeUserInformation(row){
-      this.form = row;
+    // 编辑角色信息
+    editeRoleInformation(row){
+      this.GetAuthorizationTree();
       this.isEdite = true;
-      this.form.roleByGid = row.roleByGid.split(',');
-      this.form.userAvatarUrl = row.userAvatarUrl;
-      this.form.userGender = row.userGender + ''
-      this.form.userName = row.userName
-      this.isShowEditeUserInfo = true;
+      this.form.kid = row.kid
+      this.form.authorityByKid = row.authorityByKid.split(',');
+      console.log(this.form.authorityByKid);
+      this.form.remark = row.remark;
+      this.form.roleName = row.roleName
+      this.isShowEditeRoleInfo = true;
     },
-    // 删除用户
-    deleteUser(kid){
+    // 删除角色
+    deleteRole(kid){
       const loading = ElLoading.service({
         fullscreen: false,
         text: "服务连接中......",
@@ -288,7 +201,7 @@ export default {
       });
       this.$http
       .delete(
-        `/Account/DeleteUserByVirtual`,
+        `/Account/DeleteRoleInforamation`,
        {params: { kid:kid }}
       )
       .then(({ code, message }) => {
@@ -300,15 +213,18 @@ export default {
         loading.close();
       });
     },
-    // 新增用户
+    // 新增角色
     inseartUser(){
       this.isEdite = false;
       this.form = {};
 
-      this.isShowEditeUserInfo = true;
+      this.isShowEditeRoleInfo = true;
     },
     // 提交表单
     onSubmit(formName){
+      this.form.authorityByKid = this.$refs.tree.getCheckedKeys()
+      // console.log(this.$refs.tree.getCheckedKeys())
+      // return;
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const loading = ElLoading.service({
@@ -317,39 +233,50 @@ export default {
             background: "rgba(0, 0, 0, 0.8)",
           });
           this.$http
-            .post(
-              `/Account/UpdateUserInformationByUser`,
-              { ...this.form }
-            )
-            .then(({ code, message }) => {
-              this.$showMessage(code, message, ()=> {
-                this.getUserRoleListByPage();
-                this.isShowEditeUserInfo = false;
-              })
-              loading.close();
-            });
+          .put(
+            `/Account/UpdateRoleInforamation`,
+            { ...this.form }
+          )
+          .then(({ code, message }) => {
+            this.$showMessage(code, message, ()=> {
+              this.getUserRoleListByPage();
+              this.isShowEditeRoleInfo = false;
+            })
+            loading.close();
+          });
           this.dialogVisible = false;
         } else {
           return false;
         }
       });
     },
-    getUserRolesSelectBox(){
+    getSelectAuthorizationBoxItem(){
       this.$http
-        .get(
-          `/Account/GetUserRolesSelectBox`
-        )
-        .then(({ data, code }) => {
-          if (code == 200) {
-            this.roleSelectBoxItem = data;
-          }
-        });
-
+      .get(
+        `/Account/GetSelectAuthorizationBoxItem`
+      )
+      .then(({ data, code }) => {
+        if (code == 200) {
+          this.selectAuthorizationBoxItem = data;
+        }
+      });
+    },
+    GetAuthorizationTree(){
+      this.$http
+      .get(
+        `/Account/GetAuthorizationTree`
+      )
+      .then(({ data, code }) => {
+        if (code == 200) {
+          this.authorizationTree = data;
+        }
+      });
     }
   },
   mounted(){
     this.getUserRoleListByPage();
-    this.getUserRolesSelectBox();
+    this.getSelectAuthorizationBoxItem();
+    
   }
 }
 </script>
