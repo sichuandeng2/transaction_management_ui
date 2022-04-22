@@ -19,10 +19,10 @@
             {{ ++scope.$index }}
           </template>
         </el-table-column>
-        <el-table-column prop="planName" label="计划名称" width="120" show-overflow-tooltip= true />
-        <el-table-column prop="progress" label="进度" width="80" show-overflow-tooltip= true />
-        <el-table-column prop="planInner" label="计划内容" width="120" show-overflow-tooltip= true />
-        <el-table-column prop="expireDate" label="到期时间" width="220" show-overflow-tooltip= true />
+        <el-table-column prop="planName" label="计划名称" width="120" show-overflow-tooltip />
+        <el-table-column prop="progress" label="进度" width="80" show-overflow-tooltip />
+        <el-table-column prop="planInner" label="计划内容" width="120" show-overflow-tooltip />
+        <el-table-column prop="expireDate" label="到期时间" width="220" show-overflow-tooltip />
 				<el-table-column prop="cycleTime" label="周期" width="80">
 					<template #default="scope">
 						{{getCycleText(scope.row.cycleType)}}
@@ -106,7 +106,6 @@ export default {
         pageSize: 10,
         pageIndex: 1
       },
-      detail: {},
       count:0,
       isShowTask: false
     };

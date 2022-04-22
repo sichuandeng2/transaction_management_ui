@@ -18,29 +18,29 @@
             {{ ++scope.$index }}
           </template>
         </el-table-column>
-        <el-table-column prop="userName" label="用户名" width="120" show-overflow-tooltip= true />
-        <!-- <el-table-column prop="nickName" label="昵称" width="120" show-overflow-tooltip= true /> -->
-				<el-table-column prop="userGender" label="性别" width="80" show-overflow-tooltip= true >
+        <el-table-column prop="userName" label="用户名" width="120" show-overflow-tooltip />
+        <!-- <el-table-column prop="nickName" label="昵称" width="120" show-overflow-tooltip /> -->
+				<el-table-column prop="userGender" label="性别" width="80" show-overflow-tooltip >
 					<template #default="scope">
 						{{getUserGender(scope.row.userGender)}}
 					</template>
 				</el-table-column>
-        <el-table-column prop="roles" label="角色" width="160" show-overflow-tooltip= true >
+        <el-table-column prop="roles" label="角色" width="160" show-overflow-tooltip >
 					<template #default="scope">
 						{{scope.row.roles.join(',')}}
 					</template>
 				</el-table-column>
-        <el-table-column prop="phone" label="手机" width="160" show-overflow-tooltip= true />
-        <!-- <el-table-column prop="wechat" label="微信" width="160" show-overflow-tooltip= true /> -->
-        <el-table-column prop="email" label="邮箱" width="160" show-overflow-tooltip= true />
+        <el-table-column prop="phone" label="手机" width="160" show-overflow-tooltip />
+        <!-- <el-table-column prop="wechat" label="微信" width="160" show-overflow-tooltip /> -->
+        <el-table-column prop="email" label="邮箱" width="160" show-overflow-tooltip />
 				<el-table-column prop="lastLoginTime" label="最后登录" />
 				<el-table-column prop="createTime" label="创建时间" />
         <el-table-column label="操作">
             <template #default="scope">
                 <el-button type="text" v-if="!scope.row.isEnable"  @click="changeIsEnable(scope.row.kid, true)">启用</el-button>
-                <el-button type="text" v-else @click="changeIsEnable(scope.row.kid, false)">禁用</el-button>
+                <el-button type="text" :disabled="scope.row.userName =='admin'" v-else @click="changeIsEnable(scope.row.kid, false)">禁用</el-button>
                 <el-button type="text" @click="editeUserInformation(scope.row)">编辑</el-button>
-                <el-button type="text" @click="deleteUser(scope.row.kid)">删除</el-button>
+                <el-button type="text" :disabled="scope.row.userName =='admin'"  @click="deleteUser(scope.row.kid)">删除</el-button>
             </template>
         </el-table-column>
       </el-table>
@@ -63,46 +63,40 @@
             <el-form-item label="头像" prop="userGid" v-if="isEdite">
                 <el-upload
                   ref="upload"
-                  :action="$http.baseURL + '/Account/uploadAvatar'"
+                  :action="$http.baseURL + '/Account/UploadAvatarByUser'"
                   :headers="customHeaders"
                   :limit="1"
-                  :on-success="uploudSuccess"
+                  :data="{kid:form.kid}"
                 >
                   <template #trigger>
                     <el-avatar :size="60" :src="$http.baseURL + form.userAvatarUrl">{{form.userAvatarUrl==''?"添加":""}}</el-avatar>
-                    <!-- <el-button type="primary">select file</el-button> -->
                   </template>
-                  <el-button class="ml-3" type="success" @click="submitUpload" style="display:none">
+                  <el-button class="ml-3" type="success" style="display:none">
                     upload to server
                   </el-button>
-                  <!-- <template #tip>
-                    <div class="el-upload__tip text-red">
-                      limit 1 file, new file will cover the old file
-                    </div>
-                  </template> -->
                 </el-upload>
             </el-form-item>
           </div>
           <div style="display: flex">
-            <el-form-item label="账号" prop="userName" v-if="!isEdite">
+            <el-form-item label="账号" prop="userName" >
               <el-input
+                :disabled="isEdite"
                 v-model="form.userName"
                 placeholder="登录账号"
               ></el-input>
             </el-form-item>
+            <el-form-item label="邮箱" prop="email">
+              <el-input
+                v-model="form.email"
+                placeholder="请输入邮箱地址"
+              ></el-input>
+            </el-form-item>
+          </div>
+          <div style="display: flex">
             <el-form-item label="昵称" prop="nickName">
               <el-input
                 v-model="form.nickName"
                 placeholder="用户昵称"
-              ></el-input>
-            </el-form-item>
-          </div>
-
-          <div style="display: flex">
-            <el-form-item label="手机" prop="phone">
-              <el-input
-                v-model="form.phone"
-                placeholder="请输入手机号码"
               ></el-input>
             </el-form-item>
             <el-form-item label="微信" prop="wechat">
@@ -119,10 +113,10 @@
                 placeholder="请输入QQ"
               ></el-input>
             </el-form-item>
-            <el-form-item label="邮箱" prop="email">
+            <el-form-item label="手机" prop="phone">
               <el-input
-                v-model="form.email"
-                placeholder="请输入邮箱地址"
+                v-model="form.phone"
+                placeholder="请输入手机号码"
               ></el-input>
             </el-form-item>
           </div>
@@ -183,29 +177,35 @@ export default {
       form:{
         kid: null,
         roleByGid:[],
+        userGender:'0',
       },
       rules: {
         qq: [
           { pattern: /^[1-9][0-9]{4,14}$/, message: '请输入有效的QQ账号' }
         ],
         phone: [
-          { required: true, message: "手机号能为空", trigger: "blur" },
+          // { required: true, message: "手机号能为空", trigger: "blur" },
           { pattern: /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/, message: "请输入有效电话号码", trigger: "blur" },
         ],
         userName: [
           { required: true, message: "用户账号不能为空", trigger: "blur" },
           { min: 3, message: "用户账号不能短于3个字符", trigger: "blur" },
         ],
-        nickName: [
-          { required: true, message: "用户昵称不能为空", trigger: "blur" },
-          { min: 3, message: "用户名不能短于3个字符", trigger: "blur" },
-        ],
+        // nickName: [
+        //   { required: true, message: "用户昵称不能为空", trigger: "blur" },
+        //   { min: 3, message: "用户名不能短于3个字符", trigger: "blur" },
+        // ],
         email:[
+          { required: true, message: "邮箱地址不能为空", trigger: "blur" },
           { pattern: /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/, message: "请输入有效的邮箱地址", trigger: "blur" },
         ],
       },
       isEdite: false,
-      roleSelectBoxItem:[]
+      roleSelectBoxItem:[],
+      customHeaders:{
+          authorization:"bearer " + localStorage["token"]
+      },
+      count: 0,
     }
   },
   methods:{
@@ -280,12 +280,19 @@ export default {
     },
     // 编辑用户信息
     editeUserInformation(row){
-      this.form = row;
       this.isEdite = true;
-      this.form.roleByGid = row.roleByGid.split(',');
+      this.form.roleByGid = !!row.roleByGid? row.roleByGid.split(','): [];
+      // console.log(this.form.roleByGid)
       this.form.userAvatarUrl = row.userAvatarUrl;
       this.form.userGender = row.userGender + ''
       this.form.userName = row.userName
+      this.form.kid = row.kid
+      this.form.email = row.email
+      this.form.phone = row.phone
+      this.form.qq = row.qq
+      this.form.wechat = row.wechat
+      this.form.nickName = row.nickName
+      this.form.remark = row.remark
       this.isShowEditeUserInfo = true;
     },
     // 删除用户
@@ -312,7 +319,9 @@ export default {
     // 新增用户
     inseartUser(){
       this.isEdite = false;
-      this.form = {};
+      this.form = {
+        userGender: '0'
+      };
 
       this.isShowEditeUserInfo = true;
     },

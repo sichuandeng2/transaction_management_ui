@@ -18,20 +18,24 @@
             {{ ++scope.$index }}
           </template>
         </el-table-column>
-        <el-table-column prop="roleName" label="角色" width="120" show-overflow-tooltip= true />
-        <el-table-column prop="authorityByKid" label="授权" width="320" show-overflow-tooltip= true />
+        <el-table-column prop="roleName" label="角色" width="120" show-overflow-tooltip />
+        <el-table-column prop="authorityByKid" label="授权" width="320" show-overflow-tooltip >
+          <template #default="scope">
+            {{ getAutorityName(scope.row.authorityByKid) }}
+          </template>
+        </el-table-column>
         <el-table-column prop="kid" label="状态" width="50">
           <template #default="scope">
             {{ scope.row.isEnable ? "启用":"停用" }}
           </template>
         </el-table-column>
-        <el-table-column prop="createTime" label="创建时间" width="180" show-overflow-tooltip= true />
+        <el-table-column prop="createTime" label="创建时间" width="180" show-overflow-tooltip />
           <el-table-column label="操作">
             <template #default="scope">
                 <el-button type="text" v-if="!scope.row.isEnable"  @click="changeIsEnable(scope.row.kid, true)">启用</el-button>
-                <el-button type="text" v-else @click="changeIsEnable(scope.row.kid, false)">禁用</el-button>
+                <el-button type="text" :disabled="scope.row.roleName== 'admin'" v-else @click="changeIsEnable(scope.row.kid, false)">禁用</el-button>
                 <el-button type="text" @click="editeRoleInformation(scope.row)">编辑</el-button>
-                <el-button type="text" @click="deleteRole(scope.row.kid)">删除</el-button>
+                <el-button type="text" :disabled="scope.row.roleName== 'admin'" @click="deleteRole(scope.row.kid)">删除</el-button>
             </template>
         </el-table-column>
       </el-table>
@@ -54,9 +58,10 @@
             <el-input
               v-model="form.roleName"
               placeholder="请输入角色名称"
+              :disabled="form.roleName== '开发人员'"
             ></el-input>
           </el-form-item>
-          <el-form-item label="权限">
+          <el-form-item label="权限" v-show="form.roleName !='开发人员'">
             <el-tree
               :data="authorizationTree"
               show-checkbox
@@ -86,7 +91,7 @@ import Layout from "../../components/Layout.vue";
 import { ElLoading } from "element-plus";
 import { ref } from 'vue'
 export default {
-  name: "用户管理",
+  name: "roleManage",
   components:{
     Layout
   },
@@ -119,6 +124,7 @@ export default {
         label: 'label'
       },
       selectThree:[],
+      count: 0,
     }
   },
   methods:{
@@ -183,11 +189,10 @@ export default {
     },
     // 编辑角色信息
     editeRoleInformation(row){
-      this.GetAuthorizationTree();
       this.isEdite = true;
       this.form.kid = row.kid
       this.form.authorityByKid = row.authorityByKid.split(',');
-      console.log(this.form.authorityByKid);
+      if(this.$refs.tree)this.$refs.tree.setCheckedKeys( row.authorityByKid.split(','))
       this.form.remark = row.remark;
       this.form.roleName = row.roleName
       this.isShowEditeRoleInfo = true;
@@ -223,8 +228,6 @@ export default {
     // 提交表单
     onSubmit(formName){
       this.form.authorityByKid = this.$refs.tree.getCheckedKeys()
-      // console.log(this.$refs.tree.getCheckedKeys())
-      // return;
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const loading = ElLoading.service({
@@ -250,17 +253,6 @@ export default {
         }
       });
     },
-    getSelectAuthorizationBoxItem(){
-      this.$http
-      .get(
-        `/Account/GetSelectAuthorizationBoxItem`
-      )
-      .then(({ data, code }) => {
-        if (code == 200) {
-          this.selectAuthorizationBoxItem = data;
-        }
-      });
-    },
     GetAuthorizationTree(){
       this.$http
       .get(
@@ -271,12 +263,22 @@ export default {
           this.authorizationTree = data;
         }
       });
+    },
+    getAutorityName(kids){
+      let authNames = [];
+      let treeNode =this.authorizationTree;
+      treeNode.forEach(element => {
+       let node = element.children;
+        node.forEach(e => {
+          if(kids.includes(e.id)) authNames.push(e.label);
+        })
+      });
+      return authNames.join(',')
     }
   },
   mounted(){
+    this.GetAuthorizationTree();
     this.getUserRoleListByPage();
-    this.getSelectAuthorizationBoxItem();
-    
   }
 }
 </script>

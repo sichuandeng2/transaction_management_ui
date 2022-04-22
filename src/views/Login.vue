@@ -96,19 +96,12 @@ export default {
         });
         return;
       }
-
-      // var formdata = new FormData();
-      // formdata.append("userName", this.form.account);
-      // formdata.append("password", this.form.password);
-      // formdata.append("validateCode", this.form.validateCode);
       var params = {
         userName:this.form.account,
         userPassword: this.form.password,
         validateCode:this.form.validateCode,
       }
       const loading = ElLoading.service({ fullscreen: true, fullscreen: false, text: "服务请求中......",background:"rgba(0, 0, 0, 0.8)" })
-      // console.log(this.$http.get("/Account/Login",{params}))
-      
       this.$http
         .get("/Account/Login", {params})
         .then(({message, code, data}) => {
@@ -124,7 +117,6 @@ export default {
         })
         .catch((err) => {
           console.log(err)
-          // loading.close();
         });
         loading.close();
     },

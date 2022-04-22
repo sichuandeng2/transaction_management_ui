@@ -52,15 +52,15 @@
 						</template>
 						<el-menu-item index="/plan/planManage">
 							<el-icon>
-								<Bell />
+								<Calendar />
 							</el-icon>
-							<span class="none-select">计划管理</span>
+							<span class="none-select">发布计划</span>
 						</el-menu-item>
 						<el-menu-item index="/plan/operatePlan">
 							<el-icon>
-								<Bell />
+								<UserFilled />
 							</el-icon>
-							<span class="none-select">操作计划</span>
+							<span class="none-select">完成计划</span>
 						</el-menu-item>
 						<el-menu-item index="/plan/myPlan">
 							<el-icon>
@@ -78,19 +78,19 @@
 						</template>
 						<el-menu-item index="/user/index">
 							<el-icon>
-								<Bell />
+								<UserFilled />
 							</el-icon>
 							<span class="none-select">个人信息</span>
 						</el-menu-item>
 						<el-menu-item index="/user/userManagement" v-if="isShowManageMenu">
 							<el-icon>
-								<Bell />
+								<List />
 							</el-icon>
 							<span class="none-select">用户管理</span>
 						</el-menu-item>
 						<el-menu-item index="/user/roleManagement" v-if="isShowManageMenu">
 							<el-icon>
-								<Bell />
+								<List />
 							</el-icon>
 							<span class="none-select">角色管理</span>
 						</el-menu-item>
@@ -154,6 +154,7 @@
 		List,
 		Bell,
 		UserFilled,
+		Calendar,
 		Menu as IconMenu,
 	} from "@element-plus/icons";
 
@@ -171,6 +172,7 @@
 			List,
 			Goods,
 			UserFilled,
+			Calendar,
 			ElLoading
 		},
 		setup() {
@@ -179,6 +181,7 @@
 			});
 			const exit = () => {
 				localStorage.clear("token");
+				sessionStorage.clear("userInfomation")
 				window.location.href = "/login";
 			};
 			return {

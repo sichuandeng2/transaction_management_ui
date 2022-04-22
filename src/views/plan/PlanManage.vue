@@ -52,25 +52,25 @@
 						{{ ++scope.$index }}
 					</template>
 				</el-table-column>
-				<el-table-column prop="planName" show-overflow-tooltip= true label="计划名称" width="120" />
-				<el-table-column prop="planInner" show-overflow-tooltip= true  label="计划内容" width="120" />
-				<el-table-column prop="planType" show-overflow-tooltip= true label="计划类型" width="120">
+				<el-table-column prop="planName" show-overflow-tooltip label="计划名称" width="120" />
+				<el-table-column prop="planInner" show-overflow-tooltip  label="计划内容" width="120" />
+				<el-table-column prop="planType" show-overflow-tooltip label="计划类型" width="120">
 					<template #default="scope">
 						{{getPlanTypeName(scope.row.planType)}}
 					</template>
 				</el-table-column>
-				<el-table-column prop="cycleTime" label="到期时间" width="220" show-overflow-tooltip= true>
+				<el-table-column prop="cycleTime" label="到期时间" width="220" show-overflow-tooltip>
 					<template #default="scope">
 						{{getCycleTime(scope.row.timeZone, scope.row.cycleType)}}
 					</template>
 				</el-table-column>
-				<el-table-column prop="cycleTime" label="周期" width="80" show-overflow-tooltip= true>
+				<el-table-column prop="cycleTime" label="周期" width="80" show-overflow-tooltip>
 					<template #default="scope">
 						{{getCycleText(scope.row.cycleType)}}
 					</template>
 				</el-table-column>
-				<el-table-column prop="createUserName" label="创建用户"  show-overflow-tooltip= true />
-				<el-table-column prop="createTime" label="创建时间" show-overflow-tooltip= true />
+				<el-table-column prop="createUserName" label="创建用户"  show-overflow-tooltip />
+				<el-table-column prop="createTime" label="创建时间" show-overflow-tooltip />
 				<el-table-column label="操作">
 					<template #default="scope">
 						<el-button type="text" @click="editPlan(scope.row)">编辑</el-button>

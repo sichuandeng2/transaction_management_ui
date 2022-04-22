@@ -15,11 +15,12 @@
                     <p>QQ: {{userInfomation.qq == null || userInfomation.qq == "" ? '未知': userInfomation.qq}}</p>
                     <p>微信：{{userInfomation.wechat == null ? '未知' : userInfomation.wechat}}</p>
                 </div>
+                <el-button type="primary" @click="editePassword">修改密码</el-button>
                 <el-button type="primary" @click="editeUser">编辑</el-button>
             </div>
         </template>
     </Layout>
-		<!-- 编辑弹出层 -->
+		<!-- 编辑用户信息弹出层 -->
 		<el-dialog title="编辑" v-model="isShowEditeUserInfo" width="680px">
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
           <div  >
@@ -46,7 +47,7 @@
                 </el-upload>
             </el-form-item>
           </div>
-          <el-form-item label="用户昵称" prop="nickName">
+          <el-form-item label="昵称" prop="nickName">
               <el-input
                 v-model="form.nickName"
                 placeholder="用户昵称"
@@ -99,6 +100,21 @@
           </el-form-item>
         </el-form>
     </el-dialog>
+    <el-dialog title="修改密码" v-model="isShowEditePassword" width="680px">
+      <el-form ref="editePasswordForm" :model="editePasswordForm" :rules="editePasswordRules" label-width="100px">
+        <el-form-item label="原密码" prop="oldPassword">
+          <el-input v-model="editePasswordForm.oldPassword" type="password" placeholder="原密码"></el-input>
+        </el-form-item>
+        <el-form-item  label="新密码" prop="newPassword">
+          <el-input v-model="editePasswordForm.newPassword" type="password" placeholder="新密码"></el-input>
+        </el-form-item>   
+        <el-form-item  label="确认密码" prop="enterNewPassword">
+          <el-input v-model="editePasswordForm.enterNewPassword" type="password" placeholder="确认密码"></el-input>
+        </el-form-item>
+        <el-button type="primary"  @click="onSubmitPasswordForm('editePasswordForm')">提交</el-button>
+        <el-button @click="isShowEditePassword = false">取消</el-button>
+      </el-form>
+    </el-dialog>
 </template>
 
 <script>
@@ -139,8 +155,28 @@ export default {
             { pattern: /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/, message: "请输入有效的邮箱地址", trigger: "blur" },
           ],
         },
+        editePasswordRules:{
+          oldPassword: [
+            { required: true, message: "原密码不能为空", trigger: "blur" },
+            { min: 3, message: "密码不能少于3个字符", trigger: "blur" },
+          ],
+          newPassword: [
+            { required: true, message: "新密码不能为空", trigger: "blur" },
+            { min: 3, message: "密码不能少于3个字符", trigger: "blur" },
+          ],
+          enterNewPassword: [
+            { required: true, message: "确认新密码不能为空", trigger: "blur" },
+            { min: 3, message: "密码不能少于3个字符", trigger: "blur" },
+          ],
+        },
         customHeaders:{
           authorization:"bearer " + localStorage["token"]
+        },
+        isShowEditePassword: false,
+        editePasswordForm:{
+          oldPassword:'',
+          newPassword:'',
+          enterNewPassword:''
         }
       }
     },
@@ -158,6 +194,9 @@ export default {
 				this.userInfomation.userGender = this.userInfomation.userGender + ''
 				this.isShowEditeUserInfo = true
 			},
+      editePassword(){
+        this.isShowEditePassword = true;
+      },
 			onSubmit(formName){
 				 this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -184,6 +223,34 @@ export default {
         }
       });
 			},
+      onSubmitPasswordForm(formName){
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            const loading = ElLoading.service({
+            fullscreen: false,
+            text: "服务连接中......",
+            background: "rgba(0, 0, 0, 0.8)",
+          });
+          this.$http
+          .post(
+            `/Account/UpdatePassword`,
+            { ...this.editePasswordForm }
+          )
+          .then(({ code, message }) => {
+            this.$showMessage(code, message, ()=> {
+              if(code== 200){
+                this.isShowEditeUserInfo = false;
+                localStorage.clear("token");
+                sessionStorage.clear("userInfomation")
+                window.location.href = "/login";
+              }
+
+            })
+            loading.close();
+          });
+          }
+        })
+      },
       submitUpload(){
         // upload.value!.submit()
       },

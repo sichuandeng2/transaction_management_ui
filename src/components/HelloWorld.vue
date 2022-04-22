@@ -56,4 +56,7 @@ li {
 a {
   color: #42b983;
 }
+/* div >>> .el-table{
+  width: 0px;
+} */
 </style>

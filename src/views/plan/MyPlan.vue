@@ -19,11 +19,11 @@
             {{ ++scope.$index }}
           </template>
         </el-table-column>
-        <el-table-column prop="planName" label="计划名称" width="120" show-overflow-tooltip= true />
-        <el-table-column prop="progress" label="进度" width="80" show-overflow-tooltip= true />
-        <el-table-column prop="planInner" label="计划内容" width="120" show-overflow-tooltip= true />
-        <el-table-column prop="expireDate" label="到期时间" width="220" show-overflow-tooltip= true />
-				<el-table-column prop="cycleTime" label="周期" width="80" show-overflow-tooltip= true >
+        <el-table-column prop="planName" label="计划名称" width="120" show-overflow-tooltip />
+        <el-table-column prop="progress" label="进度" width="80" show-overflow-tooltip />
+        <el-table-column prop="planInner" label="计划内容" width="120" show-overflow-tooltip />
+        <el-table-column prop="expireDate" label="到期时间" width="220" show-overflow-tooltip />
+				<el-table-column prop="cycleTime" label="周期" width="80" show-overflow-tooltip >
 					<template #default="scope">
 						{{getCycleText(scope.row.cycleType)}}
 					</template>
@@ -33,11 +33,10 @@
 						{{getPlanTypeName(scope.row.planType)}}
 					</template>
 				</el-table-column>
-        <!-- <el-table-column prop="createUserName" label="创建用户" /> -->
 				<el-table-column prop="createTime" label="创建时间" />
         <el-table-column label="操作">
             <template #default="scope">
-                <el-button type="text" @click="detail(scope.row)">详情</el-button>
+                <el-button type="text" @click="lookDetail(scope.row)">详情</el-button>
             </template>
         </el-table-column>
       </el-table>
@@ -57,7 +56,40 @@
       <!-- 弹出层 -->
       <el-dialog title="详情" v-model="isShowTask" width="680px">
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-
+          					<el-form-item label="计划名称" prop="planName">
+						<el-input v-model="form.planName" placeholder="请输入计划名称"></el-input>
+					</el-form-item>
+					<el-form-item label="计划内容" prop="planName">
+						<el-input v-model="form.planInner" placeholder="请输入计划内容"></el-input>
+					</el-form-item>
+					<div style="display:flex">
+						<el-form-item label="计划周期" style="text-align: left;">
+							<el-select v-model="form.cycleType" placeholder="请选择" filterable
+								>
+								<el-option label="单次" value="0"></el-option>
+								<el-option label="每小时" value="1"></el-option>
+								<el-option label="每天" value="2"></el-option>
+								<el-option label="每周" value="3"></el-option>
+								<el-option label="每月" value="4"></el-option>
+								<el-option label="每季度" value="5"></el-option>
+								<el-option label="每年" value="6"></el-option>
+							</el-select>
+						</el-form-item>
+						<el-form-item label="时间" prop="selectedTime">
+              <el-input v-model="form.expireDate" placeholder="请输入计划内容"></el-input>
+						</el-form-item>
+					</div>
+					<el-form-item label="计划类型" style="text-align: left;">
+						<el-radio-group v-model="form.planType">
+							<el-radio label="1">学习计划</el-radio>
+							<el-radio label="2">工作计划</el-radio>
+							<el-radio label="3">生活计划</el-radio>
+						</el-radio-group>
+					</el-form-item>
+					<el-form-item label="备注">
+						<el-input v-model="form.remark" type="textarea" rows="5"></el-input>
+					</el-form-item>
+          <el-button @click="isShowTask = false">关闭</el-button>
         </el-form>
       </el-dialog>
     </template>
@@ -76,17 +108,13 @@ export default {
     return {
       tableData: [],
       form: {
-        materialName: "",
-        ModelNumber: "",
-        quantityRequired: 0,
-        unitPrice: null,
-        suggestLocation: "",
-        precedenceLevel: "不重要但紧急",
-        remark: "",
-        userInfo: {
-          nickName: "选择委托人",
-          userAvatarUrl: "",
-        },
+        planName: "",
+        planInner: "",
+        expireDate: "",
+        cycleType: 0,
+        planType: 0,
+        progress: 0,
+        remark: ""
       },
       rules: {
         materialName: [
@@ -103,7 +131,6 @@ export default {
         pageSize: 10,
         pageIndex: 1
       },
-      detail: {},
       count:0,
       isShowTask: false
     };
@@ -149,8 +176,15 @@ export default {
       this.search.pageSize = item;
       this.getPlanLogHistoryByPage();
     },
-    detail(){
-      
+    lookDetail(row){
+      this.form.planName =row.planName
+      this.form.planInner=row.planInner
+      this.form.expireDate=row.expireDate
+      this.form.cycleType=row.cycleType+""
+      this.form.planType=row.planType+""
+      this.form.progress=row.progress
+      this.form.remark=row.remark
+      this.isShowTask = true;
     },
     // 获取计划类型名称
     getPlanTypeName(planTypeIndex) {
