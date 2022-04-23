@@ -30,7 +30,7 @@
       </div>
       <el-divider class="hir-line"></el-divider>
       
-      <el-table :data="tableData" highlight-current-row @current-change="getCurentRow" :row-class-name="classStatus" max-height="calc( 100vh - 225px)" style="overflow-y: scroll;">
+      <el-table :data="tableData" highlight-current-row @current-change="getCurentRow" :row-class-name="classStatus" height="calc( 100vh - 225px)" >
         <el-table-column prop="kid" label="序号" width="50" >
           <template #default="scope">
             {{++scope.$index}}
@@ -83,7 +83,7 @@
               ></el-input>
             </el-form-item>
             <el-form-item label="建议金额" prop="unitPrice">
-              <el-input v-model.number="form.unitPrice" placeholder="0.00">
+              <el-input v-model="form.unitPrice" placeholder="0.00">
                 <template #append>元</template>
               </el-input>
             </el-form-item>
@@ -178,7 +178,7 @@ export default {
         ],
         unitPrice: [
           { required: true, message: "购置金额不能为空", trigger: "blur" },
-          { type: "number", message: "请输入整数", trigger: "blur" },
+          { pattern: /(^(([1-9]+\d*)|(0{1}))(\.\d{1,2})?$)|(^-([1-9]+\d*(\.\d{1,2})?|0\.(0[1-9]{1}|[1-9]{1}\d?))$)/, message: "请输入金额", trigger: "blur" },
         ],
       },
       // 搜索查询

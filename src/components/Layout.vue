@@ -7,7 +7,7 @@
 					:default-active="navLeftActive" text-color="#fff" router mode="vertical" collapse>
 					<el-menu-item index="/">
 						<el-icon>
-							<home-filled />
+							<House />
 						</el-icon>
 						<span class="none-select">主页</span>
 					</el-menu-item>
@@ -20,20 +20,18 @@
 						</template>
 						<el-menu-item index="/materialPurchase/index">
 							<el-icon>
-								<Bell />
+								<CaretRight />
 							</el-icon>
 							<span class="none-select">发布待购</span>
 						</el-menu-item>
 						<el-menu-item index="/materialPurchase/purchaseMaterials">
 							<el-icon>
-								<shopping-cart />
+								<CaretRight />
 							</el-icon>
 							<span class="none-select">待购物资</span>
 						</el-menu-item>
 						<el-menu-item index="/materialPurchase/AlreadyBought">
-							<el-icon>
-								<List />
-							</el-icon>
+						<el-icon><CaretRight /></el-icon>
 							<span class="none-select">我的购买</span>
 						</el-menu-item>
 					</el-sub-menu>
@@ -46,25 +44,25 @@
 					<el-sub-menu index="/plan">
 						<template #title>
 							<el-icon :class="{'select-sub-menu' : isSelectPlan}">
-								<flag />
+								<Fold />
 							</el-icon>
 							<span class="none-select">计划</span>
 						</template>
 						<el-menu-item index="/plan/planManage">
 							<el-icon>
-								<Calendar />
+								<CaretRight />
 							</el-icon>
 							<span class="none-select">发布计划</span>
 						</el-menu-item>
 						<el-menu-item index="/plan/operatePlan">
 							<el-icon>
-								<UserFilled />
+								<CaretRight />
 							</el-icon>
 							<span class="none-select">完成计划</span>
 						</el-menu-item>
 						<el-menu-item index="/plan/myPlan">
 							<el-icon>
-								<UserFilled />
+								<CaretRight />
 							</el-icon>
 							<span class="none-select">我的计划</span>
 						</el-menu-item>
@@ -72,25 +70,25 @@
 					<el-sub-menu index="/user">
 						<template #title>
 							<el-icon :class="{'select-sub-menu' : isSelectUser}">
-								<UserFilled />
+								<el-icon><user /></el-icon>
 							</el-icon>
 							<span>用户</span>
 						</template>
 						<el-menu-item index="/user/index">
 							<el-icon>
-								<UserFilled />
+								<CaretRight />
 							</el-icon>
 							<span class="none-select">个人信息</span>
 						</el-menu-item>
 						<el-menu-item index="/user/userManagement" v-if="isShowManageMenu">
 							<el-icon>
-								<List />
+								<CaretRight />
 							</el-icon>
 							<span class="none-select">用户管理</span>
 						</el-menu-item>
 						<el-menu-item index="/user/roleManagement" v-if="isShowManageMenu">
 							<el-icon>
-								<List />
+								<CaretRight />
 							</el-icon>
 							<span class="none-select">角色管理</span>
 						</el-menu-item>
@@ -149,11 +147,15 @@
 		HomeFilled,
 		ShoppingCart,
 		Money,
-		Flag,
+		Fold,
 		Goods,
 		List,
 		Bell,
+		CaretRight,	
 		UserFilled,
+		User,
+		House,
+		ArrowRightBold,
 		Calendar,
 		Menu as IconMenu,
 	} from "@element-plus/icons";
@@ -166,11 +168,15 @@
 			IconMenu,
 			ArrowDownBold,
 			ShoppingCart,
+			ArrowRightBold,
 			Money,
-			Flag,
+			Fold,
 			Bell,
+			User,
+			House,
 			List,
 			Goods,
+			CaretRight,
 			UserFilled,
 			Calendar,
 			ElLoading

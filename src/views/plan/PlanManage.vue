@@ -46,7 +46,7 @@
 			  <el-button type="primary" @click="insertPlan" style="height: 16px">新增计划</el-button>
 			</div>
 			<!-- 表格 -->
-			<el-table :data="tableData" highlight-current-row max-height="calc( 100vh - 214px)" style="overflow-y: scroll;">
+			<el-table :data="tableData" highlight-current-row height="calc( 100vh - 214px)" >
 				<el-table-column prop="gid" label="序号" width="50">
 					<template #default="scope">
 						{{ ++scope.$index }}

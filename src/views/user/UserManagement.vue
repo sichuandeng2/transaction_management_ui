@@ -12,7 +12,7 @@
         </el-form>
         <el-button type="primary" @click="inseartUser" style="height: 16px">新增用户</el-button>
       </div>
-      <el-table :data="tableData" highlight-current-row max-height="calc( 100vh - 225px)" style="overflow-y: scroll;">
+      <el-table :data="tableData" highlight-current-row height="calc( 100vh - 225px)" >
         <el-table-column prop="kid" label="序号" width="50">
           <template #default="scope">
             {{ ++scope.$index }}
@@ -66,7 +66,6 @@
                   :action="$http.baseURL + '/Account/UploadAvatarByUser'"
                   :headers="customHeaders"
                   :limit="1"
-                  :data="{kid:form.kid}"
                 >
                   <template #trigger>
                     <el-avatar :size="60" :src="$http.baseURL + form.userAvatarUrl">{{form.userAvatarUrl==''?"添加":""}}</el-avatar>
@@ -203,7 +202,7 @@ export default {
       isEdite: false,
       roleSelectBoxItem:[],
       customHeaders:{
-          authorization:"bearer " + localStorage["token"]
+        authorization:"bearer " + localStorage["token"],
       },
       count: 0,
     }

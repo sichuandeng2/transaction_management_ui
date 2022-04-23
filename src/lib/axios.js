@@ -5,7 +5,6 @@ const baseURL = "http://43.138.151.223:5000/api"
 // 指定默认地址
 axios.defaults.baseURL = baseURL;
 axios.defaults.timeout = 30000;
-// axios.defaults.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
 
 // 指定请求拦截器
 axios.interceptors.request.use(
