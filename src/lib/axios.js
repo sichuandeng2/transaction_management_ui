@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { stringifyQuery } from 'vue-router';
-const baseURL = "http://43.138.151.223:5000/api"
+const baseURL = "http://43.138.151.223:8000/api"
 // const baseURL = "http://localhost:5000/api"
 // 指定默认地址
 axios.defaults.baseURL = baseURL;
@@ -23,7 +23,6 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
     response =>{
         if (response.status == 200) {
-           
             return response.data;
         }
         console.log(response);
@@ -38,7 +37,7 @@ axios.interceptors.response.use(
         switch(status){
             case 401:
                 localStorage.clear("token")
-                window.location.href = "/login"
+                window.location.href = "/web/login"
                 break;   
             case 500:
                 // window.alert("系统内部错误");

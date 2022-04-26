@@ -1,7 +1,7 @@
 <template>
   <Layout>
     <template v-slot:elBreadcrumb>
-      <el-breadcrumb-item :to="{ path: '/projectManagement' }">项目管理</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/web/projectManagement' }">项目管理</el-breadcrumb-item>
     </template>
     <template v-slot:inner>
         <p>this is project Management</p>

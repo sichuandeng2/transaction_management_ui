@@ -108,7 +108,7 @@ export default {
           this.$showMessage(code, message, ()=>{
             if(code == 1000){
               localStorage["token"] = data;
-              this.$router.push("/");
+              this.$router.push("/web/");
             }
           });
           this.path = this.$http.baseURL + "/Account/GetValidateCode?t=" + new Date().getTime();
@@ -126,7 +126,7 @@ export default {
     if (token == null || token == undefined || token == "") {
       return;
     }
-    this.$router.push("/");
+    this.$router.push("/web/");
   },
 };
 </script>

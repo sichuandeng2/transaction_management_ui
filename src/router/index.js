@@ -16,87 +16,87 @@ import UserManagement from'../views/user/UserManagement.vue'
 import RoleManagement from'../views/user/RoleManagement.vue'
 const routes = [
   {
-    path: '/',
+    path: '/web/',
     name: 'Home',
     component: Home
   },
   {
-    path: '/login',
+    path: '/web/login',
     name: 'Login',
     component: Login
   },
   {
-    path: '/materialPurchase',
+    path: '/web/materialPurchase',
     name: 'Buy',
     component: Material,
     children:[
       {
         // 发布待购
-        path:'/materialPurchase/index',
+        path:'/web/materialPurchase/index',
         name: 'MaterialPurchase',
         component: MaterialPurchase,
         meta: {
-          activeMenu: '/materialPurchase',
+          activeMenu: '/web/materialPurchase',
         }
       },
       {
         // 待购物质
-        path:'/materialPurchase/purchaseMaterials',
+        path:'/web/materialPurchase/purchaseMaterials',
         name: 'PurchaseMaterials',
         component: PurchaseMaterials,
         meta: {
-          activeMenu: '/materialPurchase'
+          activeMenu: '/web/materialPurchase'
         }
       },
       {
         // 已购物质
-        path:'/materialPurchase/AlreadyBought',
+        path:'/web/materialPurchase/AlreadyBought',
         name: 'AlreadyBought',
         component: AlreadyBought,
         meta: {
-          activeMenu: '/materialPurchase'
+          activeMenu: '/web/materialPurchase'
         }
       },
     ]
   },
   {
-    path: '/projectManagement',
+    path: '/web/projectManagement',
     name: 'ProjectManagement',
     component: ProjectManagement
   },
   {
-    path: '/plan',
+    path: '/web/plan',
     name: 'Plan',
     component: PlanIndex,
     children:[
       {
-        path: '/plan/planManage',
+        path: '/web/plan/planManage',
         name: 'planManage',
         component: PlanManage,
         meta:{
-          activeMenu: '/plan'
+          activeMenu: '/web/plan'
         }
       },
       {
-        path: '/plan/myPlan',
+        path: '/web/plan/myPlan',
         name: 'myPlan',
         component: MyPlan,
         meta:{
-          activeMenu: '/plan'
+          activeMenu: '/web/plan'
         }
       },
       {
-        path: '/plan/operatePlan',
+        path: '/web/plan/operatePlan',
         name: 'operatePlan',
         component: OperatePlan,
         meta:{
-          activeMenu: '/plan'
+          activeMenu: '/web/plan'
         }
       },
     ]
   },
   {
-    path: '/about',
+    path: '/web/about',
     name: 'About',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -104,32 +104,32 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
-    path: '/user',
+    path: '/web/user',
     name: 'user',
     component: UserLayout,
     children:[
       {
-        path: '/user/index',
+        path: '/web/user/index',
         name: 'updateUser',
         component: Personal,
         meta:{
-          activeMenu: '/user'
+          activeMenu: '/web/user'
         }
       },
       {
-        path: '/user/userManagement',
+        path: '/web/user/userManagement',
         name: 'userManagement',
         component: UserManagement,
         meta:{
-          activeMenu: '/user'
+          activeMenu: '/web/user'
         }
       },
       {
-        path: '/user/roleManagement',
+        path: '/web/user/roleManagement',
         name: 'roleManagement',
         component: RoleManagement,
         meta:{
-          activeMenu: '/user'
+          activeMenu: '/web/user'
         }
       },
     ]

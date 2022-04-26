@@ -5,88 +5,88 @@
 			<el-col class="layout-menu">
 				<el-menu active-text-color="var(--select-item-color)" background-color="#545c64"
 					:default-active="navLeftActive" text-color="#fff" router mode="vertical" collapse>
-					<el-menu-item index="/">
+					<el-menu-item index="/web/">
 						<el-icon>
 							<House />
 						</el-icon>
 						<span class="none-select">主页</span>
 					</el-menu-item>
-					<el-sub-menu index="/materialPurchase">
+					<el-sub-menu index="/web/materialPurchase">
 						<template #title>
 							<el-icon :class="{'select-sub-menu' : isSelectSubMenu}">
 								<Goods />
 							</el-icon>
 							<span>物资购买</span>
 						</template>
-						<el-menu-item index="/materialPurchase/index">
+						<el-menu-item index="/web/materialPurchase/index">
 							<el-icon>
 								<CaretRight />
 							</el-icon>
 							<span class="none-select">发布待购</span>
 						</el-menu-item>
-						<el-menu-item index="/materialPurchase/purchaseMaterials">
+						<el-menu-item index="/web/materialPurchase/purchaseMaterials">
 							<el-icon>
 								<CaretRight />
 							</el-icon>
 							<span class="none-select">待购物资</span>
 						</el-menu-item>
-						<el-menu-item index="/materialPurchase/AlreadyBought">
+						<el-menu-item index="/web/materialPurchase/AlreadyBought">
 						<el-icon><CaretRight /></el-icon>
 							<span class="none-select">我的购买</span>
 						</el-menu-item>
 					</el-sub-menu>
-					<el-menu-item index="/projectManagement">
+					<el-menu-item index="/web/projectManagement">
 						<el-icon>
 							<money />
 						</el-icon>
 						<span class="none-select">项目管理</span>
 					</el-menu-item>
-					<el-sub-menu index="/plan">
+					<el-sub-menu index="/web/plan">
 						<template #title>
 							<el-icon :class="{'select-sub-menu' : isSelectPlan}">
 								<Fold />
 							</el-icon>
 							<span class="none-select">计划</span>
 						</template>
-						<el-menu-item index="/plan/planManage">
+						<el-menu-item index="/web/plan/planManage">
 							<el-icon>
 								<CaretRight />
 							</el-icon>
 							<span class="none-select">发布计划</span>
 						</el-menu-item>
-						<el-menu-item index="/plan/operatePlan">
+						<el-menu-item index="/web/plan/operatePlan">
 							<el-icon>
 								<CaretRight />
 							</el-icon>
 							<span class="none-select">完成计划</span>
 						</el-menu-item>
-						<el-menu-item index="/plan/myPlan">
+						<el-menu-item index="/web/plan/myPlan">
 							<el-icon>
 								<CaretRight />
 							</el-icon>
 							<span class="none-select">我的计划</span>
 						</el-menu-item>
 					</el-sub-menu>
-					<el-sub-menu index="/user">
+					<el-sub-menu index="/web/user">
 						<template #title>
 							<el-icon :class="{'select-sub-menu' : isSelectUser}">
 								<el-icon><user /></el-icon>
 							</el-icon>
 							<span>用户</span>
 						</template>
-						<el-menu-item index="/user/index">
+						<el-menu-item index="/web/user/index">
 							<el-icon>
 								<CaretRight />
 							</el-icon>
 							<span class="none-select">个人信息</span>
 						</el-menu-item>
-						<el-menu-item index="/user/userManagement" v-if="isShowManageMenu">
+						<el-menu-item index="/web/user/userManagement" v-if="isShowManageMenu">
 							<el-icon>
 								<CaretRight />
 							</el-icon>
 							<span class="none-select">用户管理</span>
 						</el-menu-item>
-						<el-menu-item index="/user/roleManagement" v-if="isShowManageMenu">
+						<el-menu-item index="/web/user/roleManagement" v-if="isShowManageMenu">
 							<el-icon>
 								<CaretRight />
 							</el-icon>
@@ -188,7 +188,7 @@
 			const exit = () => {
 				localStorage.clear("token");
 				sessionStorage.clear("userInfomation")
-				window.location.href = "/login";
+				window.location.href = "/web/login";
 			};
 			return {
 				// 退出登录
@@ -255,11 +255,11 @@
 					meta,
 					path
 				} = this.$route;
-				if (meta.activeMenu == "/materialPurchase") {
+				if (meta.activeMenu == "/web/materialPurchase") {
 					this.isSelectSubMenu = true;
-				} else if (meta.activeMenu == "/user") {
+				} else if (meta.activeMenu == "/web/user") {
 					this.isSelectUser = true;
-				} else if( meta.activeMenu == "/plan") {
+				} else if( meta.activeMenu == "/web/plan") {
 					this.isSelectPlan = true
 				}
 				else {

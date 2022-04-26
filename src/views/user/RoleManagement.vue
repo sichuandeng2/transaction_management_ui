@@ -33,9 +33,9 @@
           <el-table-column label="操作">
             <template #default="scope">
                 <el-button type="text" v-if="!scope.row.isEnable"  @click="changeIsEnable(scope.row.kid, true)">启用</el-button>
-                <el-button type="text" :disabled="scope.row.roleName== 'admin'" v-else @click="changeIsEnable(scope.row.kid, false)">禁用</el-button>
-                <el-button type="text" @click="editeRoleInformation(scope.row)">编辑</el-button>
-                <el-button type="text" :disabled="scope.row.roleName== 'admin'" @click="deleteRole(scope.row.kid)">删除</el-button>
+                <el-button type="text" :disabled="scope.row.roleName== '管理员'" v-else @click="changeIsEnable(scope.row.kid, false)">禁用</el-button>
+                <el-button type="text" :disabled="scope.row.roleName== '管理员'" @click="editeRoleInformation(scope.row)">编辑</el-button>
+                <el-button type="text" :disabled="scope.row.roleName== '管理员'" @click="deleteRole(scope.row.kid)">删除</el-button>
             </template>
         </el-table-column>
       </el-table>
